@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { getTickets } from "../utils/storage";
 import { isExpired } from "../utils/helpers";
-import { ADMIN_PIN } from "../constants";
 
 function HomeScreen({ setScreen, setCurrentTicket }) {
   const [ticketInput, setTicketInput] = useState("");
@@ -22,9 +21,25 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
     setLoading(false);
   };
 
-  const handleAdmin = () => {
-    if (adminInput === ADMIN_PIN) { setScreen("admin"); }
-    else { setError("Incorrect admin PIN."); }
+  const handleAdmin = async () => {
+    setError(""); setLoading(true);
+    try {
+      const res = await fetch("/api/admin-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: adminInput }),
+      });
+      if (res.ok) {
+        const { token } = await res.json();
+        sessionStorage.setItem("adminToken", token);
+        setScreen("admin");
+      } else {
+        setError("Incorrect admin PIN.");
+      }
+    } catch {
+      setError("Could not reach server. Try again.");
+    }
+    setLoading(false);
   };
 
   return (
@@ -68,13 +83,13 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
           ) : (
             <div style={{ display: "flex", gap: "8px" }}>
               <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type="password" placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "10px 14px", color: "#e8dcc8", fontSize: "14px" }} />
-              <button onClick={handleAdmin} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "#f0d080", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>Enter</button>
+              <button onClick={handleAdmin} disabled={loading} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "#f0d080", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>{loading ? "..." : "Enter"}</button>
             </div>
           )}
         </div>
 
         <p style={{ textAlign: "center", fontSize: "11px", color: "#4a3d20", marginTop: "32px", letterSpacing: "1px" }}>
-          © 2025 DrivePrep SA · Admin PIN: admin123
+          © 2026 DrivePrep SA
         </p>
       </div>
     </div>

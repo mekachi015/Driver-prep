@@ -1,1 +1,1 @@
-export const ADMIN_PIN = "admin123";
+// ADMIN_PIN removed — validated server-side via /api/admin-login

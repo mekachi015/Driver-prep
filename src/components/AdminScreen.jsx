@@ -13,6 +13,13 @@ function AdminScreen({ setScreen }) {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
+    const token = sessionStorage.getItem("adminToken");
+    if (!token) { setScreen("home"); return; }
+    // Check token hasn't expired (expiry encoded in base64 payload)
+    try {
+      const [, expiry] = atob(token).split(":");
+      if (Date.now() > Number(expiry)) { sessionStorage.removeItem("adminToken"); setScreen("home"); return; }
+    } catch { sessionStorage.removeItem("adminToken"); setScreen("home"); return; }
     getTickets().then(setTickets);
     getResults().then(setResults);
   }, []);
@@ -56,7 +63,7 @@ function AdminScreen({ setScreen }) {
               <div style={{ fontSize: "22px", color: "#f0d080", fontWeight: 700 }}>{results.length}</div>
               <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>TESTS DONE</div>
             </div>
-            <button onClick={() => setScreen("home")} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#8a7a60", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>← Logout</button>
+            <button onClick={() => { sessionStorage.removeItem("adminToken"); setScreen("home"); }} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#8a7a60", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>← Logout</button>
           </div>
         </div>
 
