@@ -7,6 +7,7 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
   const [error, setError] = useState("");
   const [adminInput, setAdminInput] = useState("");
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showPin, setShowPin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -82,7 +83,12 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
             </button>
           ) : (
             <div style={{ display: "flex", gap: "8px" }}>
-              <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type="password" placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "10px 14px", color: "#e8dcc8", fontSize: "14px" }} />
+              <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
+                <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type={showPin ? "text" : "password"} placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "10px 40px 10px 14px", color: "#e8dcc8", fontSize: "14px", boxSizing: "border-box" }} />
+                <button onClick={() => setShowPin(v => !v)} className="btn" tabIndex={-1} title={showPin ? "Hide PIN" : "Show PIN"} style={{ position: "absolute", right: "8px", background: "none", border: "none", padding: "4px", cursor: "pointer", color: "#8a7a60", fontSize: "15px", lineHeight: 1 }}>
+                  {showPin ? "🙈" : "👁"}
+                </button>
+              </div>
               <button onClick={handleAdmin} disabled={loading} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "#f0d080", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>{loading ? "..." : "Enter"}</button>
             </div>
           )}

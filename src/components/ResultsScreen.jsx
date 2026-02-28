@@ -68,6 +68,11 @@ function ResultsScreen({ result, setScreen }) {
                     <span style={{ color: correct ? "#6bffb8" : "#ff6b6b", fontWeight: 700 }}>{i + 1}.</span>
                     <p style={{ color: "#e8dcc8", fontSize: "14px", lineHeight: 1.5 }}>{q.question}</p>
                   </div>
+                  {q.image && (
+                    <div style={{ marginBottom: "12px", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(201,168,76,0.2)", background: "rgba(0,0,0,0.3)" }}>
+                      <img src={q.image} alt="Vehicle controls diagram" style={{ width: "100%", maxHeight: "220px", objectFit: "contain", display: "block", padding: "8px" }} />
+                    </div>
+                  )}
                   {q.options.map((opt, j) => {
                     const isCorrectOpt = j === q.answer;
                     const isUserChoice = j === answers[q.id];

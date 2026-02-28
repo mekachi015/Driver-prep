@@ -91,7 +91,20 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
             <span style={{ background: `rgba(${catColors[q.category] === "#6bffb8" ? "107,255,184" : catColors[q.category] === "#f0d080" ? "240,208,128" : "255,159,107"},0.1)`, color: catColors[q.category], border: `1px solid ${catColors[q.category]}40`, borderRadius: "20px", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>{q.category}</span>
             <span style={{ color: "#4a3d20", fontSize: "13px" }}>Q{current + 1} of {questions.length}</span>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", lineHeight: 1.6, color: "#e8dcc8", marginBottom: "28px" }}>{q.question}</p>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", lineHeight: 1.6, color: "#e8dcc8", marginBottom: q.image ? "20px" : "28px" }}>{q.question}</p>
+
+          {q.image && (
+            <div style={{ marginBottom: "24px", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(201,168,76,0.25)", background: "rgba(0,0,0,0.3)" }}>
+              <img
+                src={q.image}
+                alt="Vehicle controls diagram"
+                style={{ width: "100%", maxHeight: "320px", objectFit: "contain", display: "block", padding: "12px" }}
+              />
+              <div style={{ padding: "6px 12px 8px", fontSize: "11px", color: "#8a7a60", letterSpacing: "1px", textTransform: "uppercase", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
+                Vehicle Controls Diagram — refer to this image to answer the question
+              </div>
+            </div>
+          )}
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {q.options.map((opt, i) => {
