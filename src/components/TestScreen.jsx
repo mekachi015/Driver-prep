@@ -63,12 +63,12 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>
       <div className="fade-in">
         {/* Top Bar */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+        <div className="test-topbar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
           <div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#f0d080" }}>Practice Test</h2>
             <p style={{ fontSize: "13px", color: "#8a7a60" }}>Welcome, {ticket.name}</p>
           </div>
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <div className="test-topbar-counters" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <div style={{ background: timeLeft < 300 ? "rgba(255,107,107,0.15)" : "rgba(201,168,76,0.1)", border: `1px solid ${timeLeft < 300 ? "rgba(255,107,107,0.4)" : "rgba(201,168,76,0.3)"}`, borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
               <div style={{ fontFamily: "monospace", fontSize: "20px", color: timeLeft < 300 ? "#ff6b6b" : "#f0d080", animation: timeLeft < 60 ? "pulse 1s infinite" : "none" }}>{mm}:{ss}</div>
               <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>REMAINING</div>
@@ -128,3 +128,5 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     </div>
   );
 }
+
+export default TestScreen;

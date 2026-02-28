@@ -25,6 +25,16 @@ export default function App() {
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
         .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @media (max-width: 640px) {
+          .admin-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+          .admin-header-right { flex-wrap: wrap !important; }
+          .ticket-form { flex-direction: column !important; }
+          .admin-row-tickets { grid-template-columns: 1fr 1fr 1fr auto !important; }
+          .admin-row-results { grid-template-columns: 1fr 1fr 1fr !important; }
+          .hide-sm { display: none !important; }
+          .test-topbar { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+          .test-topbar-counters { width: 100% !important; }
+        }
       `}</style>
 
       {screen === "home" && <HomeScreen setScreen={setScreen} setCurrentTicket={setCurrentTicket} />}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getTickets } from "../utils/storage";
 import { isExpired } from "../utils/helpers";
-import { ADMIN_PIN } from "../utils/constants";
+import { ADMIN_PIN } from "../constants";
 
 function HomeScreen({ setScreen, setCurrentTicket }) {
   const [ticketInput, setTicketInput] = useState("");
@@ -80,3 +80,5 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
     </div>
   );
 }
+
+export default HomeScreen;

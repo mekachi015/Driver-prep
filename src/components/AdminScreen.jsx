@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getTickets, saveTickets, getResults } from "../utils/storage";
-import {genTicket, addDays, isExpired } from "../utils/helper";
+import { genTicket, addDays, isExpired } from "../utils/helpers";
 
 
 function AdminScreen({ setScreen }) {
@@ -42,12 +42,12 @@ function AdminScreen({ setScreen }) {
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "900px", margin: "0 auto" }}>
       <div className="fade-in">
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px" }}>
+        <div className="admin-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px" }}>
           <div>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "#f0d080" }}>Admin Dashboard</h1>
             <p style={{ color: "#8a7a60", fontSize: "13px", marginTop: "4px" }}>DrivePrep SA Control Panel</p>
           </div>
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <div className="admin-header-right" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
               <div style={{ fontSize: "22px", color: "#f0d080", fontWeight: 700 }}>{activeCount}</div>
               <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>ACTIVE</div>
@@ -74,7 +74,7 @@ function AdminScreen({ setScreen }) {
             {/* Create Ticket */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "12px", padding: "24px", marginBottom: "24px" }}>
               <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "#e8dcc8", marginBottom: "20px" }}>Create New Ticket</h3>
-              <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+              <div className="ticket-form" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                 <input value={name} onChange={e => setName(e.target.value)} placeholder="Client name / surname" style={{ flex: "1 1 200px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "12px 14px", color: "#e8dcc8", fontSize: "14px" }} />
                 <select value={days} onChange={e => setDays(e.target.value)} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "12px 14px", color: "#e8dcc8", fontSize: "14px" }}>
                   <option value={3}>3 Days — R20</option>
@@ -106,17 +106,17 @@ function AdminScreen({ setScreen }) {
 
             {/* Tickets List */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.1)", borderRadius: "12px", overflow: "hidden" }}>
-              <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", color: "#8a7a60", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
-                <span>Ticket</span><span>Client</span><span>Days</span><span>Expires</span><span>Action</span>
+              <div className="admin-row-tickets" style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", color: "#8a7a60", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
+                <span>Ticket</span><span>Client</span><span className="hide-sm">Days</span><span>Expires</span><span>Action</span>
               </div>
               {Object.entries(tickets).length === 0 && <p style={{ padding: "24px", color: "#4a3d20", textAlign: "center" }}>No tickets yet. Create one above.</p>}
               {Object.entries(tickets).reverse().map(([key, val]) => {
                 const expired = isExpired(val.expiry);
                 return (
-                  <div key={key} style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", alignItems: "center", opacity: expired ? 0.5 : 1 }}>
+                  <div key={key} className="admin-row-tickets" style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", alignItems: "center", opacity: expired ? 0.5 : 1 }}>
                     <span style={{ fontFamily: "monospace", color: "#f0d080", fontSize: "13px" }}>{key}</span>
                     <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{val.name}</span>
-                    <span style={{ fontSize: "14px", color: "#8a7a60" }}>{val.days}d</span>
+                    <span className="hide-sm" style={{ fontSize: "14px", color: "#8a7a60" }}>{val.days}d</span>
                     <span style={{ fontSize: "13px", color: expired ? "#ff6b6b" : "#6bffb8" }}>{val.expiry} {expired ? "✗" : "✓"}</span>
                     {!expired && <button onClick={() => deactivate(key)} className="btn" style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.3)", color: "#ff6b6b", padding: "6px 12px", borderRadius: "6px", fontSize: "11px" }}>Deactivate</button>}
                     {expired && <span style={{ fontSize: "11px", color: "#4a3d20" }}>Expired</span>}
@@ -129,15 +129,15 @@ function AdminScreen({ setScreen }) {
 
         {tab === "results" && (
           <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.1)", borderRadius: "12px", overflow: "hidden" }}>
-            <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", color: "#8a7a60", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
-              <span>Date</span><span>Client</span><span>Ticket</span><span>Score</span><span>Result</span>
+            <div className="admin-row-results" style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", color: "#8a7a60", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
+              <span className="hide-sm">Date</span><span>Client</span><span className="hide-sm">Ticket</span><span>Score</span><span>Result</span>
             </div>
             {results.length === 0 && <p style={{ padding: "24px", color: "#4a3d20", textAlign: "center" }}>No test results yet.</p>}
             {[...results].reverse().map((r, i) => (
-              <div key={i} style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", alignItems: "center" }}>
-                <span style={{ fontSize: "12px", color: "#8a7a60" }}>{r.date}</span>
+              <div key={i} className="admin-row-results" style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", alignItems: "center" }}>
+                <span className="hide-sm" style={{ fontSize: "12px", color: "#8a7a60" }}>{r.date}</span>
                 <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{r.name}</span>
-                <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#f0d080" }}>{r.ticket}</span>
+                <span className="hide-sm" style={{ fontFamily: "monospace", fontSize: "12px", color: "#f0d080" }}>{r.ticket}</span>
                 <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{r.score}/{r.total} ({r.pct}%)</span>
                 <span style={{ color: r.passed ? "#6bffb8" : "#ff6b6b", fontSize: "13px", fontWeight: 700 }}>{r.passed ? "PASS ✓" : "FAIL ✗"}</span>
               </div>
@@ -148,3 +148,5 @@ function AdminScreen({ setScreen }) {
     </div>
   );
 }
+
+export default AdminScreen;

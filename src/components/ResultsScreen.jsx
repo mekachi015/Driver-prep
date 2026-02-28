@@ -89,3 +89,5 @@ function ResultsScreen({ result, setScreen }) {
     </div>
   );
 }
+
+export default ResultsScreen;
