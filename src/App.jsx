@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import HomeScreen from "./components/HomeScreen";
+import AdminScreen from "./components/AdminScreen";
+import TestScreen from "./components/TestScreen";
+import ResultsScreen from "./components/ResultsScreen";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [screen, setScreen] = useState("home"); // home | admin | test | results
+  const [currentTicket, setCurrentTicket] = useState(null);
+  const [testResult, setTestResult] = useState(null);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div style={{ fontFamily: "'Georgia', 'Times New Roman', serif", minHeight: "100vh", background: "#0a0f1e", color: "#e8dcc8" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0a0f1e; }
+        .btn { cursor: pointer; border: none; transition: all 0.2s; }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        input, select { outline: none; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0f1e; }
+        ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+      `}</style>
 
-export default App
+      {screen === "home" && <HomeScreen setScreen={setScreen} setCurrentTicket={setCurrentTicket} />}
+      {screen === "admin" && <AdminScreen setScreen={setScreen} />}
+      {screen === "test" && <TestScreen ticket={currentTicket} setScreen={setScreen} setTestResult={setTestResult} />}
+      {screen === "results" && <ResultsScreen result={testResult} setScreen={setScreen} />}
+    </div>
+  );
+}
