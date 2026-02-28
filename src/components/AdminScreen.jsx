@@ -25,13 +25,19 @@ function AdminScreen({ setScreen }) {
 
   const createTicket = async () => {
     if (!name.trim()) { setMsg("Please enter a client name."); return; }
-    const num = genTicket();
-    const expiry = addDays(Number(days));
-    const updated = { ...tickets, [num]: { name: name.trim(), days: Number(days), expiry, created: new Date().toISOString().split("T")[0] } };
-    await saveTickets(updated);
-    setTickets(updated);
-    setNewTicket({ num, name: name.trim(), days, expiry });
-    setName(""); setDays(7);
+    setMsg("Creating ticket...");
+    try {
+      const num = genTicket();
+      const expiry = addDays(Number(days));
+      const updated = { ...tickets, [num]: { name: name.trim(), days: Number(days), expiry, created: new Date().toISOString().split("T")[0] } };
+      await saveTickets(updated);
+      setTickets(updated);
+      setNewTicket({ num, name: name.trim(), days, expiry });
+      setName(""); setDays(7);
+      setMsg("");
+    } catch (e) {
+      setMsg("Error: " + e.message);
+    }
   };
 
   const deactivate = async (key) => {
