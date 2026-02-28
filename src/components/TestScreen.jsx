@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { QUESTIONS_DB } from "../data/questions";
 import { getResults, saveResults } from "../utils/storage";
 import { shuffle } from "../utils/helpers";
+import { PASS_MARK } from "../constants";
 
 
 function TestScreen({ ticket, setScreen, setTestResult }) {
@@ -42,7 +43,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     clearInterval(timerRef.current);
     const score = qs.reduce((acc, q) => acc + (ans[q.id] === q.answer ? 1 : 0), 0);
     const pct = Math.round((score / qs.length) * 100);
-    const passed = pct >= 75;
+    const passed = pct >= PASS_MARK;
     const result = { score, total: qs.length, pct, passed, questions: qs, answers: ans, ticket: ticket.number, name: ticket.name, date: new Date().toISOString().split("T")[0] };
     const prev = await getResults();
     await saveResults([...prev, { score, total: qs.length, pct, passed, ticket: ticket.number, name: ticket.name, date: result.date }]);

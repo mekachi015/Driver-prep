@@ -15,7 +15,6 @@ function AdminScreen({ setScreen }) {
   useEffect(() => {
     const token = sessionStorage.getItem("adminToken");
     if (!token) { setScreen("home"); return; }
-    // Check token hasn't expired (expiry encoded in base64 payload)
     try {
       const [, expiry] = atob(token).split(":");
       if (Date.now() > Number(expiry)) { sessionStorage.removeItem("adminToken"); setScreen("home"); return; }

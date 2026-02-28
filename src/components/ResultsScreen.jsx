@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { PASS_MARK } from "../constants";
 
 function ResultsScreen({ result, setScreen }) {
   const [showReview, setShowReview] = useState(false);
@@ -22,7 +23,7 @@ function ResultsScreen({ result, setScreen }) {
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "40px", color: passed ? "#6bffb8" : "#ff6b6b", marginBottom: "8px" }}>{passed ? "PASS" : "FAIL"}</h1>
           <div style={{ fontSize: "56px", fontWeight: 900, color: "#f0d080", lineHeight: 1, marginBottom: "8px" }}>{pct}%</div>
           <div style={{ color: "#8a7a60", fontSize: "16px" }}>Score: {score} / {total} correct</div>
-          <div style={{ color: "#8a7a60", fontSize: "13px", marginTop: "8px" }}>Pass mark: 75% &nbsp;·&nbsp; {passed ? "Well done!" : "You need 75% to pass. Keep practising!"}</div>
+          <div style={{ color: "#8a7a60", fontSize: "13px", marginTop: "8px" }}>Pass mark: {PASS_MARK}% &nbsp;·&nbsp; {passed ? "Well done!" : `You need ${PASS_MARK}% to pass. Keep practising!`}</div>
         </div>
 
         {/* Category Breakdown */}
@@ -34,10 +35,10 @@ function ResultsScreen({ result, setScreen }) {
               <div key={cat} style={{ marginBottom: "16px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                   <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{cat}</span>
-                  <span style={{ fontSize: "14px", color: cpct >= 75 ? "#6bffb8" : "#ff6b6b" }}>{data.correct}/{data.total} ({cpct}%)</span>
+                  <span style={{ fontSize: "14px", color: cpct >= PASS_MARK ? "#6bffb8" : "#ff6b6b" }}>{data.correct}/{data.total} ({cpct}%)</span>
                 </div>
                 <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: "4px", height: "6px", overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${cpct}%`, background: cpct >= 75 ? "linear-gradient(90deg,#6bffb8,#4dcca0)" : "linear-gradient(90deg,#ff6b6b,#ff4040)", borderRadius: "4px", transition: "width 0.6s" }} />
+                  <div style={{ height: "100%", width: `${cpct}%`, background: cpct >= PASS_MARK ? "linear-gradient(90deg,#6bffb8,#4dcca0)" : "linear-gradient(90deg,#ff6b6b,#ff4040)", borderRadius: "4px", transition: "width 0.6s" }} />
                 </div>
               </div>
             );

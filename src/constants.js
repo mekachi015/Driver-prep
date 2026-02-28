@@ -1,1 +1,1 @@
-// ADMIN_PIN removed — validated server-side via /api/admin-login
+export const PASS_MARK = 75;

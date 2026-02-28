@@ -5,7 +5,7 @@ import TestScreen from "./components/TestScreen";
 import ResultsScreen from "./components/ResultsScreen";
 
 export default function App() {
-  const [screen, setScreen] = useState("home"); // home | admin | test | results
+  const [screen, setScreen] = useState("home");
   const [currentTicket, setCurrentTicket] = useState(null);
   const [testResult, setTestResult] = useState(null);
 

@@ -1,9 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  // Load all env vars (including non-VITE_ prefixed ones like ADMIN_PIN)
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
@@ -12,7 +10,31 @@ export default defineConfig(({ mode }) => {
       {
         name: 'local-api',
         configureServer(server) {
-          // Replicate the Vercel /api/admin-login handler for local dev
+          const localDB = { tickets: {}, results: [] };
+
+          const readBody = (req) => new Promise((resolve, reject) => {
+            let b = '';
+            req.on('data', c => (b += c));
+            req.on('end', () => { try { resolve(JSON.parse(b)); } catch { reject(); } });
+          });
+
+          const handle = (key, empty) => async (req, res) => {
+            res.setHeader('Content-Type', 'application/json');
+            if (req.method === 'GET') {
+              res.statusCode = 200;
+              res.end(JSON.stringify(localDB[key] ?? empty));
+            } else if (req.method === 'POST') {
+              localDB[key] = await readBody(req);
+              res.statusCode = 200;
+              res.end(JSON.stringify({ ok: true }));
+            } else {
+              res.statusCode = 405; res.end();
+            }
+          };
+
+          server.middlewares.use('/api/tickets', handle('tickets', {}));
+          server.middlewares.use('/api/results', handle('results', []));
+
           server.middlewares.use('/api/admin-login', (req, res) => {
             if (req.method !== 'POST') { res.statusCode = 405; res.end(); return; }
             let body = '';

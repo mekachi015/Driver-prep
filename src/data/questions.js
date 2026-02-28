@@ -1,5 +1,4 @@
 export const QUESTIONS_DB = [
-  // RULES OF THE ROAD
   {
     id: 1,
     category: "Rules of the Road",
@@ -163,8 +162,8 @@ export const QUESTIONS_DB = [
     question: "You are NOT allowed to stop...",
     options: [
       "Where you are also prohibited to park.",
-      "5m from a bridge.",
-      "Opposite a vehicle where the roadway is 10m wide.",
+      "9m or less from the entrance of a tunnel or bridge.",
+      "Opposite a vehicle where the roadway is 9m wide.",
     ],
     answer: 0,
   },
@@ -397,11 +396,11 @@ export const QUESTIONS_DB = [
     category: "Rules of the Road",
     question: "Where may you legally stop your vehicle?",
     options: [
-      "4m from the entrance to a tunnel.",
+      "8m from the entrance to a tunnel.",
       "5m from a pedestrian crossing.",
-      "6m from a railway line crossing.",
+      "10m from a level railway crossing.",
     ],
-    answer: 2,
+    answer: 1,
   },
   {
     id: 38,
@@ -764,13 +763,11 @@ export const QUESTIONS_DB = [
     options: ["1.5 metres.", "750mm.", "1 metre."],
     answer: 0,
   },
-
-  // ROAD SIGNS
   {
     id: 71,
     category: "Road Signs",
-    question: "All road signs with a yellow background are...",
-    options: ["Warning signs.", "Temporary signs.", "Tourism signs."],
+    question: "In South Africa, what type of road sign specifically uses a YELLOW background to indicate that the situation is not permanent?",
+    options: ["Regulatory (prohibition) signs.", "Temporary road signs.", "Guidance and information signs."],
     answer: 1,
   },
   {
@@ -904,8 +901,6 @@ export const QUESTIONS_DB = [
     ],
     answer: 1,
   },
-
-  // VEHICLE CONTROLS
   {
     id: 84,
     category: "Vehicle Controls",
@@ -1014,10 +1009,6 @@ export const QUESTIONS_DB = [
     answer: 1,
   },
 
-  // VEHICLE CONTROLS — IMAGE-BASED (diagram: Motor-Vehicle-Controls-6.jpg)
-  // Diagram labels: 1=Rear-view mirror, 2=Windscreen wipers, 3=Side mirrors,
-  // 4=Steering wheel, 5=Indicator/blinker stalk, 6=Gear lever, 7=Handbrake,
-  // 8=Clutch pedal, 9=Brake pedal, 10=Accelerator pedal, 11=Hooter/car horn
   {
     id: 94,
     category: "Vehicle Controls",
@@ -1178,7 +1169,7 @@ export const QUESTIONS_DB = [
     options: [
       "Only control 1 (rear-view mirror).",
       "Controls 1 and 3 (rear-view mirror and both side mirrors), then the blind spot.",
-      "Controls 5 and 11 (instrument cluster and console).",
+      "Controls 5 and 11 (indicator stalk and hooter).",
     ],
     answer: 1,
   },
@@ -1194,10 +1185,6 @@ export const QUESTIONS_DB = [
     ],
     answer: 2,
   },
-
-  // ROAD SIGNS — IMAGE-BASED
-
-  // --- Regulatory Signs (R-series) ---
   {
     id: 109,
     category: "Road Signs",
@@ -1380,8 +1367,6 @@ export const QUESTIONS_DB = [
     ],
     answer: 1,
   },
-
-  // --- Warning Signs (W-series) ---
   {
     id: 124,
     category: "Road Signs",
@@ -1587,8 +1572,6 @@ export const QUESTIONS_DB = [
     ],
     answer: 1,
   },
-
-  // --- Danger & Temporary Warning Plates ---
   {
     id: 141,
     category: "Road Signs",
