@@ -1,28 +1,23 @@
-async function redisGet(key) {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
-  const r = await fetch(`${url}/get/${key}`, { headers: { Authorization: `Bearer ${token}` } });
-  const json = await r.json();
-  return json.result ? JSON.parse(json.result) : null;
-}
+import { Redis } from '@upstash/redis';
 
-async function redisSet(key, value) {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
-  await fetch(`${url}/set/${key}`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify([JSON.stringify(value)]),
-  });
+function getRedis() {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) {
+    throw new Error('Redis env vars not set. Provide UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.');
+  }
+  return new Redis({ url, token });
 }
 
 export default async function handler(req, res) {
+  const redis = getRedis();
+
   if (req.method === 'GET') {
-    const tickets = await redisGet('tickets') ?? {};
+    const tickets = (await redis.get('tickets')) ?? {};
     return res.status(200).json(tickets);
   }
   if (req.method === 'POST') {
-    await redisSet('tickets', req.body);
+    await redis.set('tickets', JSON.stringify(req.body));
     return res.status(200).json({ ok: true });
   }
   res.status(405).end();
