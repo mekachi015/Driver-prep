@@ -5,9 +5,30 @@ import TestScreen from "./components/TestScreen";
 import ResultsScreen from "./components/ResultsScreen";
 
 export default function App() {
-  const [screen, setScreen] = useState("home");
-  const [currentTicket, setCurrentTicket] = useState(null);
+  // On page load, restore an in-progress test session if one exists in localStorage
+  const [screen, setScreenState] = useState(() => {
+    const ticket = JSON.parse(localStorage.getItem("activeTicket") || "null");
+    if (ticket && localStorage.getItem(`testSession_${ticket.number}`)) return "test";
+    return "home";
+  });
+  const [currentTicket, setCurrentTicketState] = useState(() => {
+    const ticket = JSON.parse(localStorage.getItem("activeTicket") || "null");
+    if (ticket && localStorage.getItem(`testSession_${ticket.number}`)) return ticket;
+    return null;
+  });
   const [testResult, setTestResult] = useState(null);
+
+  const setCurrentTicket = (ticket) => {
+    if (ticket) localStorage.setItem("activeTicket", JSON.stringify(ticket));
+    else localStorage.removeItem("activeTicket");
+    setCurrentTicketState(ticket);
+  };
+
+  const setScreen = (s) => {
+    // Clean up the active ticket when leaving the test
+    if (s !== "test") localStorage.removeItem("activeTicket");
+    setScreenState(s);
+  };
 
   return (
     <div style={{ fontFamily: "'Georgia', 'Times New Roman', serif", minHeight: "100vh", background: "#0a0f1e", color: "#e8dcc8" }}>

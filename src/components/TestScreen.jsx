@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { QUESTIONS_DB } from "../data/questions";
 import { getResults, saveResults } from "../utils/storage";
 import { shuffle } from "../utils/helpers";
@@ -6,41 +6,73 @@ import { PASS_MARK } from "../constants";
 
 
 function TestScreen({ ticket, setScreen, setTestResult }) {
-  const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
-  const [current, setCurrent] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(30 * 60);
-  const timerRef = useRef(null);
-  const answersRef = useRef({});
-  const questionsRef = useRef([]);
-  const submittedRef = useRef(false);
+  const SESSION_KEY = `testSession_${ticket.number}`;
 
-  useEffect(() => {
-    const q = shuffle(QUESTIONS_DB).slice(0, 30);
-    setQuestions(q);
-    questionsRef.current = q;
-    timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          clearInterval(timerRef.current);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, []);
+  const persistSession = useCallback((qs, ans, cur, endTime) => {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      questionIds: qs.map(q => q.id),
+      answers: ans,
+      current: cur,
+      endTime,
+    }));
+  }, [SESSION_KEY]);
 
-  useEffect(() => {
-    if (timeLeft === 0 && !submittedRef.current) {
-      handleSubmit(questionsRef.current, answersRef.current);
+  // Compute initial session data once via a lazy useState initializer —
+  // avoids calling setState inside an effect.
+  const [initData] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+    if (saved) {
+      const reconstructed = saved.questionIds
+        .map(id => QUESTIONS_DB.find(qq => qq.id === id))
+        .filter(Boolean);
+      if (reconstructed.length === 30) {
+        const endTime = saved.endTime;
+        return {
+          questions: reconstructed,
+          answers: saved.answers || {},
+          current: saved.current || 0,
+          timeLeft: Math.max(0, Math.floor((endTime - Date.now()) / 1000)),
+          endTime,
+        };
+      }
     }
-  }, [timeLeft]);
+    const q = shuffle(QUESTIONS_DB).slice(0, 30);
+    const endTime = Date.now() + 30 * 60 * 1000;
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      questionIds: q.map(qq => qq.id),
+      answers: {},
+      current: 0,
+      endTime,
+    }));
+    return { questions: q, answers: {}, current: 0, timeLeft: 30 * 60, endTime };
+  });
 
-  const handleSubmit = async (qs = questionsRef.current, ans = answersRef.current) => {
+  const [questions] = useState(initData.questions);
+  const [answers, setAnswers] = useState(initData.answers);
+  const [current, setCurrent] = useState(initData.current);
+  const [timeLeft, setTimeLeft] = useState(initData.timeLeft);
+  const [showWarning, setShowWarning] = useState(false);
+
+  const timerRef = useRef(null);
+  const answersRef = useRef(initData.answers);
+  const questionsRef = useRef(initData.questions);
+  const submittedRef = useRef(false);
+  const endTimeRef = useRef(initData.endTime);
+  const timeLeftRef = useRef(initData.timeLeft);
+
+  const submitTest = useCallback(async (forceSubmit = false) => {
     if (submittedRef.current) return;
+    const qs = questionsRef.current;
+    const ans = answersRef.current;
+
+    if (!forceSubmit && Object.keys(ans).length < qs.length) {
+      setShowWarning(true);
+      return;
+    }
+
     submittedRef.current = true;
     clearInterval(timerRef.current);
+    localStorage.removeItem(SESSION_KEY);
     const score = qs.reduce((acc, q) => acc + (ans[q.id] === q.answer ? 1 : 0), 0);
     const pct = Math.round((score / qs.length) * 100);
     const passed = pct >= PASS_MARK;
@@ -49,7 +81,28 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     await saveResults([...prev, { score, total: qs.length, pct, passed, ticket: ticket.number, name: ticket.name, date: result.date }]);
     setTestResult(result);
     setScreen("results");
-  };
+  }, [SESSION_KEY, ticket, setTestResult, setScreen]);
+
+  // Start the timer; setState and submitTest are called inside the interval
+  // callback (not directly in the effect body), which is allowed.
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      timeLeftRef.current -= 1;
+      setTimeLeft(timeLeftRef.current);
+      if (timeLeftRef.current <= 0 && !submittedRef.current) {
+        clearInterval(timerRef.current);
+        submitTest(true);
+      }
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [submitTest]);
+
+  // Persist session whenever answers or current question index change
+  useEffect(() => {
+    if (questionsRef.current.length > 0 && endTimeRef.current) {
+      persistSession(questionsRef.current, answers, current, endTimeRef.current);
+    }
+  }, [answers, current, persistSession]);
 
   const mm = String(Math.floor(timeLeft / 60)).padStart(2, "0");
   const ss = String(timeLeft % 60).padStart(2, "0");
@@ -58,10 +111,32 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
 
   if (!q) return <div style={{ padding: "40px", textAlign: "center", color: "#f0d080" }}>Loading questions...</div>;
 
+  const unansweredCount = questions.length - Object.keys(answers).length;
+
   const catColors = { "Road Signs": "#6bffb8", "Rules of the Road": "#f0d080", "Vehicle Controls": "#ff9f6b" };
 
   return (
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>
+      {/* Warning Modal */}
+      {showWarning && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          <div style={{ background: "#0e1428", border: "1px solid rgba(201,168,76,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>⚠️</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#f0d080", fontSize: "20px", marginBottom: "12px" }}>Not All Questions Answered</h3>
+            <p style={{ color: "#b0a080", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
+              You have <strong style={{ color: "#ff9f6b" }}>{unansweredCount}</strong> unanswered {unansweredCount === 1 ? "question" : "questions"} remaining.
+            </p>
+            <p style={{ color: "#8a7a60", fontSize: "13px", marginBottom: "28px" }}>Please answer all 30 questions before submitting.</p>
+            <button
+              onClick={() => setShowWarning(false)}
+              className="btn"
+              style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 32px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}
+            >
+              Continue Test
+            </button>
+          </div>
+        </div>
+      )}
       <div className="fade-in">
         {/* Top Bar */}
         <div className="test-topbar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
@@ -127,7 +202,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
             <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === 0 ? 0.4 : 1 }}>← Prev</button>
             <button onClick={() => setCurrent(c => Math.min(questions.length - 1, c + 1))} disabled={current === questions.length - 1} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === questions.length - 1 ? 0.4 : 1 }}>Next →</button>
           </div>
-          <button onClick={() => handleSubmit()} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}>
+          <button onClick={() => submitTest()} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}>
             Submit Test →
           </button>
         </div>
