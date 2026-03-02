@@ -7,7 +7,9 @@ const api = async (url, data) => {
   return data ? undefined : r.json();
 };
 
-export const getTickets  = async () => { try { return await api('/api/tickets');        } catch { return {}; } };
-export const saveTickets = async (t)  => { await api('/api/tickets', t); };
-export const getResults  = async () => { try { return await api('/api/results');        } catch { return []; } };
-export const saveResults = async (r)  => { await api('/api/results', r); };
+export const getTickets        = async () => { try { return await api('/api/tickets');           } catch { return {}; } };
+export const saveTickets       = async (t) => { await api('/api/tickets', t); };
+export const getResults        = async () => { try { return await api('/api/results');           } catch { return []; } };
+export const saveResults       = async (r) => { await api('/api/results', r); };
+export const getCustomQuestions  = async () => { try { return await api('/api/questions');      } catch { return []; } };
+export const saveCustomQuestions = async (q) => { await api('/api/questions', q); };

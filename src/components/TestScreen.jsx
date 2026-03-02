@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { QUESTIONS_DB } from "../data/questions";
-import { getResults, saveResults } from "../utils/storage";
+import { getCustomQuestions, getResults, saveResults } from "../utils/storage";
 import { shuffle } from "../utils/helpers";
 import { PASS_MARK } from "../constants";
 
@@ -17,48 +17,68 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     }));
   }, [SESSION_KEY]);
 
-  // Compute initial session data once via a lazy useState initializer —
-  // avoids calling setState inside an effect.
-  const [initData] = useState(() => {
-    const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
-    if (saved) {
-      const reconstructed = saved.questionIds
-        .map(id => QUESTIONS_DB.find(qq => qq.id === id))
-        .filter(Boolean);
-      if (reconstructed.length === 30) {
-        const endTime = saved.endTime;
-        return {
-          questions: reconstructed,
-          answers: saved.answers || {},
-          current: saved.current || 0,
-          timeLeft: Math.max(0, Math.floor((endTime - Date.now()) / 1000)),
-          endTime,
-        };
-      }
-    }
-    const q = shuffle(QUESTIONS_DB).slice(0, 30);
-    const endTime = Date.now() + 30 * 60 * 1000;
-    localStorage.setItem(SESSION_KEY, JSON.stringify({
-      questionIds: q.map(qq => qq.id),
-      answers: {},
-      current: 0,
-      endTime,
-    }));
-    return { questions: q, answers: {}, current: 0, timeLeft: 30 * 60, endTime };
-  });
-
-  const [questions] = useState(initData.questions);
-  const [answers, setAnswers] = useState(initData.answers);
-  const [current, setCurrent] = useState(initData.current);
-  const [timeLeft, setTimeLeft] = useState(initData.timeLeft);
+  const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState({});
+  const [current, setCurrent] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30 * 60);
   const [showWarning, setShowWarning] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  const exitTest = useCallback(() => {
+    clearInterval(timerRef.current);
+    localStorage.removeItem(SESSION_KEY);
+    setScreen("home");
+  }, [SESSION_KEY, setScreen]);
 
   const timerRef = useRef(null);
-  const answersRef = useRef(initData.answers);
-  const questionsRef = useRef(initData.questions);
+  const answersRef = useRef({});
+  const questionsRef = useRef([]);
   const submittedRef = useRef(false);
-  const endTimeRef = useRef(initData.endTime);
-  const timeLeftRef = useRef(initData.timeLeft);
+  const endTimeRef = useRef(null);
+  const timeLeftRef = useRef(30 * 60);
+
+  // Fetch custom questions and merge with the static DB, then restore a
+  // saved session or build a fresh 30-question set.
+  useEffect(() => {
+    getCustomQuestions().then(customQs => {
+      const pool = [...QUESTIONS_DB, ...customQs];
+      const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+      if (saved) {
+        const reconstructed = saved.questionIds
+          .map(id => pool.find(qq => String(qq.id) === String(id)))
+          .filter(Boolean);
+        if (reconstructed.length === 30) {
+          const tl = Math.max(0, Math.floor((saved.endTime - Date.now()) / 1000));
+          questionsRef.current = reconstructed;
+          answersRef.current = saved.answers || {};
+          endTimeRef.current = saved.endTime;
+          timeLeftRef.current = tl;
+          setQuestions(reconstructed);
+          setAnswers(saved.answers || {});
+          setCurrent(saved.current || 0);
+          setTimeLeft(tl);
+          setIsLoading(false);
+          return;
+        }
+      }
+      // No valid saved session — create a new one from the merged pool.
+      const q = shuffle(pool).slice(0, 30);
+      const endTime = Date.now() + 30 * 60 * 1000;
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        questionIds: q.map(qq => qq.id),
+        answers: {},
+        current: 0,
+        endTime,
+      }));
+      questionsRef.current = q;
+      answersRef.current = {};
+      endTimeRef.current = endTime;
+      timeLeftRef.current = 30 * 60;
+      setQuestions(q);
+      setIsLoading(false);
+    });
+  }, [SESSION_KEY]);
 
   const submitTest = useCallback(async (forceSubmit = false) => {
     if (submittedRef.current) return;
@@ -83,9 +103,9 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     setScreen("results");
   }, [SESSION_KEY, ticket, setTestResult, setScreen]);
 
-  // Start the timer; setState and submitTest are called inside the interval
-  // callback (not directly in the effect body), which is allowed.
+  // Start the timer once questions are loaded; auto-submits when time expires.
   useEffect(() => {
+    if (isLoading) return;
     timerRef.current = setInterval(() => {
       timeLeftRef.current -= 1;
       setTimeLeft(timeLeftRef.current);
@@ -95,7 +115,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
       }
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [submitTest]);
+  }, [isLoading, submitTest]);
 
   // Persist session whenever answers or current question index change
   useEffect(() => {
@@ -109,7 +129,9 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
   const progress = Object.keys(answers).length / (questions.length || 1);
   const q = questions[current];
 
-  if (!q) return <div style={{ padding: "40px", textAlign: "center", color: "#f0d080" }}>Loading questions...</div>;
+  if (isLoading) return <div style={{ padding: "40px", textAlign: "center", color: "var(--secondary-gold)", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Loading questions…</div>;
+
+  if (!q) return null;
 
   const unansweredCount = questions.length - Object.keys(answers).length;
 
@@ -117,6 +139,36 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
 
   return (
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>
+      {/* Exit Confirmation Modal */}
+      {showExitConfirm && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          <div style={{ background: "#0e1428", border: "1px solid rgba(255,107,107,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>🚪</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--secondary-gold)", fontSize: "20px", marginBottom: "12px" }}>Leave Current Test?</h3>
+            <p style={{ color: "#b0a080", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
+              Your progress <strong style={{ color: "var(--accent-red)" }}>will not be saved</strong> and you will be returned to the login screen.
+            </p>
+            <p style={{ color: "#8a7a60", fontSize: "13px", marginBottom: "28px" }}>Are you sure you want to exit?</p>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowExitConfirm(false)}
+                className="btn"
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "var(--text-main)", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 600 }}
+              >
+                Stay in Test
+              </button>
+              <button
+                onClick={exitTest}
+                className="btn"
+                style={{ background: "linear-gradient(135deg, #c0392b, #ff6b6b)", color: "#fff", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}
+              >
+                Exit Test
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Warning Modal */}
       {showWarning && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
@@ -202,9 +254,14 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
             <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === 0 ? 0.4 : 1 }}>← Prev</button>
             <button onClick={() => setCurrent(c => Math.min(questions.length - 1, c + 1))} disabled={current === questions.length - 1} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === questions.length - 1 ? 0.4 : 1 }}>Next →</button>
           </div>
-          <button onClick={() => submitTest()} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}>
-            Submit Test →
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button onClick={() => setShowExitConfirm(true)} className="btn" style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.35)", color: "var(--accent-red)", padding: "12px 20px", borderRadius: "8px", fontSize: "15px", fontWeight: 600 }}>
+              ✕ Exit
+            </button>
+            <button onClick={() => submitTest()} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}>
+              Submit Test →
+            </button>
+          </div>
         </div>
 
         {/* Question Grid */}

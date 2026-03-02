@@ -1633,4 +1633,16 @@ export const QUESTIONS_DB = [
     ],
     answer: 1,
   },
+   {
+    id: 145,
+    category: "Road Signs",
+    image: "/road signs/GS403.jpg",
+    question: "Bullshit question ?",
+    options: [
+      "The road narrows by one lane on the left-hand side.",
+      "Bullshit answer",
+      "A split in the road where the left lanes lead to a different freeway.",
+    ],
+    answer: 1,
+  },
 ];
