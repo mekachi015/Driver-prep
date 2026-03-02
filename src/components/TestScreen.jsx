@@ -113,7 +113,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
 
   const unansweredCount = questions.length - Object.keys(answers).length;
 
-  const catColors = { "Road Signs": "#6bffb8", "Rules of the Road": "#f0d080", "Vehicle Controls": "#ff9f6b" };
+  const catColors = { "Road Signs": "var(--accent-green)", "Rules of the Road": "var(--secondary-gold)", "Vehicle Controls": "var(--accent-orange)" };
 
   return (
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>

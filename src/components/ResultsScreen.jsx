@@ -20,25 +20,25 @@ function ResultsScreen({ result, setScreen }) {
         {/* Result Card */}
         <div style={{ background: passed ? "rgba(107,255,184,0.06)" : "rgba(255,107,107,0.06)", border: `1px solid ${passed ? "rgba(107,255,184,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "20px", padding: "40px", textAlign: "center", marginBottom: "24px" }}>
           <div style={{ fontSize: "64px", marginBottom: "16px" }}>{passed ? "🏆" : "📚"}</div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "40px", color: passed ? "#6bffb8" : "#ff6b6b", marginBottom: "8px" }}>{passed ? "PASS" : "FAIL"}</h1>
-          <div style={{ fontSize: "56px", fontWeight: 900, color: "#f0d080", lineHeight: 1, marginBottom: "8px" }}>{pct}%</div>
-          <div style={{ color: "#8a7a60", fontSize: "16px" }}>Score: {score} / {total} correct</div>
-          <div style={{ color: "#8a7a60", fontSize: "13px", marginTop: "8px" }}>Pass mark: {PASS_MARK}% &nbsp;·&nbsp; {passed ? "Well done!" : `You need ${PASS_MARK}% to pass. Keep practising!`}</div>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "40px", color: passed ? "var(--accent-green)" : "var(--accent-red)", marginBottom: "8px" }}>{passed ? "PASS" : "FAIL"}</h1>
+          <div style={{ fontSize: "56px", fontWeight: 900, color: "var(--secondary-gold)", lineHeight: 1, marginBottom: "8px" }}>{pct}%</div>
+          <div style={{ color: "var(--text-muted)", fontSize: "16px" }}>Score: {score} / {total} correct</div>
+          <div style={{ color: "var(--text-muted)", fontSize: "13px", marginTop: "8px" }}>Pass mark: {PASS_MARK}% &nbsp;·&nbsp; {passed ? "Well done!" : `You need ${PASS_MARK}% to pass. Keep practising!`}</div>
         </div>
 
         {/* Category Breakdown */}
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "12px", padding: "24px", marginBottom: "20px" }}>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "#e8dcc8", marginBottom: "20px" }}>Performance by Category</h3>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "var(--text-main)", marginBottom: "20px" }}>Performance by Category</h3>
           {Object.entries(byCategory).map(([cat, data]) => {
             const cpct = Math.round((data.correct / data.total) * 100);
             return (
               <div key={cat} style={{ marginBottom: "16px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{cat}</span>
-                  <span style={{ fontSize: "14px", color: cpct >= PASS_MARK ? "#6bffb8" : "#ff6b6b" }}>{data.correct}/{data.total} ({cpct}%)</span>
+                  <span style={{ fontSize: "14px", color: "var(--text-main)" }}>{cat}</span>
+                  <span style={{ fontSize: "14px", color: cpct >= PASS_MARK ? "var(--accent-green)" : "var(--accent-red)" }}>{data.correct}/{data.total} ({cpct}%)</span>
                 </div>
                 <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: "4px", height: "6px", overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${cpct}%`, background: cpct >= PASS_MARK ? "linear-gradient(90deg,#6bffb8,#4dcca0)" : "linear-gradient(90deg,#ff6b6b,#ff4040)", borderRadius: "4px", transition: "width 0.6s" }} />
+                  <div style={{ height: "100%", width: `${cpct}%`, background: cpct >= PASS_MARK ? "linear-gradient(90deg,var(--accent-green),#4dcca0)" : "linear-gradient(90deg,var(--accent-red),#ff4040)", borderRadius: "4px", transition: "width 0.6s" }} />
                 </div>
               </div>
             );
@@ -47,13 +47,13 @@ function ResultsScreen({ result, setScreen }) {
 
         {/* Actions */}
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "24px" }}>
-          <button onClick={() => setShowReview(!showReview)} className="btn" style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#e8dcc8", padding: "12px", borderRadius: "8px", fontSize: "14px" }}>
+          <button onClick={() => setShowReview(!showReview)} className="btn" style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-main)", padding: "12px", borderRadius: "8px", fontSize: "14px" }}>
             {showReview ? "Hide" : "Review"} Answers
           </button>
-          <button onClick={() => setScreen("test")} className="btn" style={{ flex: 1, background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px", borderRadius: "8px", fontSize: "14px", fontWeight: 700 }}>
+          <button onClick={() => setScreen("test")} className="btn" style={{ flex: 1, background: "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", color: "var(--bg-dark)", padding: "12px", borderRadius: "8px", fontSize: "14px", fontWeight: 700 }}>
             Take Another Test →
           </button>
-          <button onClick={() => setScreen("home")} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#8a7a60", padding: "12px 20px", borderRadius: "8px", fontSize: "14px" }}>
+          <button onClick={() => setScreen("home")} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-muted)", padding: "12px 20px", borderRadius: "8px", fontSize: "14px" }}>
             Logout
           </button>
         </div>

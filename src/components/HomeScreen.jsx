@@ -52,44 +52,44 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
       <div className="fade-in" style={{ width: "100%", maxWidth: "440px" }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <div style={{ display: "flex", background: "linear-gradient(135deg, #c9a84c, #f0d080)", borderRadius: "50%", width: "72px", height: "72px", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: "0 0 40px rgba(201,168,76,0.4)" }}>
+          <div style={{ display: "flex", background: "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", borderRadius: "50%", width: "72px", height: "72px", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: "0 0 40px rgba(201,168,76,0.4)" }}>
             <span style={{ fontSize: "32px" }}>🚗</span>
           </div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "36px", fontWeight: 900, color: "#f0d080", letterSpacing: "-1px", lineHeight: 1 }}>DrivePrep SA</h1>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "13px", color: "#8a7a60", marginTop: "8px", letterSpacing: "3px", textTransform: "uppercase" }}>K53 Learner's Licence Practice</p>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "36px", fontWeight: 900, color: "var(--secondary-gold)", letterSpacing: "-1px", lineHeight: 1 }}>DrivePrep SA</h1>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "13px", color: "var(--text-muted)", marginTop: "8px", letterSpacing: "3px", textTransform: "uppercase" }}>K53 Learner's Licence Practice</p>
         </div>
 
         {/* Login Card */}
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "16px", padding: "36px", backdropFilter: "blur(10px)" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", color: "#e8dcc8", marginBottom: "24px" }}>Enter Your Ticket</h2>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", color: "var(--text-main)", marginBottom: "24px" }}>Enter Your Ticket</h2>
           <input
             value={ticketInput}
             onChange={e => setTicketInput(e.target.value.toUpperCase())}
             onKeyDown={e => e.key === "Enter" && handleLogin()}
             placeholder="e.g. DP-AB34CD56"
-            style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "14px 16px", color: "#f0d080", fontSize: "18px", letterSpacing: "2px", fontFamily: "monospace", marginBottom: "12px" }}
+            style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "14px 16px", color: "var(--secondary-gold)", fontSize: "18px", letterSpacing: "2px", fontFamily: "monospace", marginBottom: "12px" }}
           />
-          <button onClick={handleLogin} disabled={loading || !ticketInput} className="btn" style={{ width: "100%", background: loading ? "#4a3d20" : "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "14px", borderRadius: "8px", fontSize: "15px", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: "1px" }}>
+          <button onClick={handleLogin} disabled={loading || !ticketInput} className="btn" style={{ width: "100%", background: loading ? "#4a3d20" : "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", color: "var(--bg-dark)", padding: "14px", borderRadius: "8px", fontSize: "15px", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: "1px" }}>
             {loading ? "Verifying..." : "Start Practice Test →"}
           </button>
-          {error && <p style={{ color: "#ff6b6b", fontSize: "13px", marginTop: "12px", textAlign: "center" }}>{error}</p>}
+          {error && <p style={{ color: "var(--accent-red)", fontSize: "13px", marginTop: "12px", textAlign: "center" }}>{error}</p>}
         </div>
 
         {/* Admin section */}
         <div style={{ marginTop: "24px", textAlign: "center" }}>
           {!showAdmin ? (
-            <button onClick={() => setShowAdmin(true)} className="btn" style={{ background: "none", color: "#8a7a60", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase" }}>
+            <button onClick={() => setShowAdmin(true)} className="btn" style={{ background: "none", color: "var(--text-muted)", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase" }}>
               Admin Access
             </button>
           ) : (
             <div style={{ display: "flex", gap: "8px" }}>
               <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
-                <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type={showPin ? "text" : "password"} placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "10px 40px 10px 14px", color: "#e8dcc8", fontSize: "14px", boxSizing: "border-box" }} />
-                <button onClick={() => setShowPin(v => !v)} className="btn" tabIndex={-1} title={showPin ? "Hide PIN" : "Show PIN"} style={{ position: "absolute", right: "8px", background: "none", border: "none", padding: "4px", cursor: "pointer", color: "#8a7a60", fontSize: "15px", lineHeight: 1 }}>
+                <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type={showPin ? "text" : "password"} placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "10px 40px 10px 14px", color: "var(--text-main)", fontSize: "14px", boxSizing: "border-box" }} />
+                <button onClick={() => setShowPin(v => !v)} className="btn" tabIndex={-1} title={showPin ? "Hide PIN" : "Show PIN"} style={{ position: "absolute", right: "8px", background: "none", border: "none", padding: "4px", cursor: "pointer", color: "var(--text-muted)", fontSize: "15px", lineHeight: 1 }}>
                   {showPin ? "🙈" : "👁"}
                 </button>
               </div>
-              <button onClick={handleAdmin} disabled={loading} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "#f0d080", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>{loading ? "..." : "Enter"}</button>
+              <button onClick={handleAdmin} disabled={loading} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "var(--secondary-gold)", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>{loading ? "..." : "Enter"}</button>
             </div>
           )}
         </div>

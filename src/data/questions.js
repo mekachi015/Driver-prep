@@ -132,7 +132,7 @@ export const QUESTIONS_DB = [
     question:
       "What is the longest period a vehicle may be parked in one place on a road outside urban areas?",
     options: ["7 days.", "48 hours.", "24 hours."],
-    answer: 1,
+    answer: 2,
   },
   {
     id: 14,
@@ -148,21 +148,23 @@ export const QUESTIONS_DB = [
   {
     id: 15,
     category: "Rules of the Road",
-    question: "You are NOT allowed to stop...",
+    question:
+      "Which of the following is a place where you are NOT allowed to stop?",
     options: [
       "On the pavement (sidewalk).",
-      "With the front of your vehicle facing oncoming traffic on a two-way road.",
-      "Next to any obstruction in the road.",
+      "On the left side of the road in a 60 km/h zone, when it is safe to do so.",
+      "Within 50m of a pedestrian crossing on the far side, where there is no marking.",
     ],
     answer: 0,
   },
   {
     id: 16,
     category: "Rules of the Road",
-    question: "You are NOT allowed to stop...",
+    question:
+      "Which of the following is a place where you are NOT allowed to stop?",
     options: [
       "Where you are also prohibited to park.",
-      "9m or less from the entrance of a tunnel or bridge.",
+      "On the left side of a road where the roadway is wider than 9m, when no signs prohibit it.",
       "Opposite a vehicle where the roadway is 9m wide.",
     ],
     answer: 0,
@@ -397,7 +399,7 @@ export const QUESTIONS_DB = [
     question: "Where may you legally stop your vehicle?",
     options: [
       "8m from the entrance to a tunnel.",
-      "5m from a pedestrian crossing.",
+      "6m from a pedestrian crossing.",
       "10m from a level railway crossing.",
     ],
     answer: 1,
@@ -416,7 +418,7 @@ export const QUESTIONS_DB = [
     question: "Which statement about your hooter is correct?",
     options: [
       "The tone or pitch of the sound may not change.",
-      "Someone must hear it from at least 50m away.",
+      "Someone must hear it from at least 90m away.",
       "You may use it to get the attention of someone you want to offer a lift.",
     ],
     answer: 0,
@@ -608,7 +610,7 @@ export const QUESTIONS_DB = [
     options: [
       "When indicated to do so by a traffic officer.",
       "In an intersection.",
-      "In contravention of any road traffic sign.",
+      "On the left side of the road to allow a passenger to out of their vehicle, if it is safe to do so.",
     ],
     answer: 1,
   },
@@ -1311,7 +1313,7 @@ export const QUESTIONS_DB = [
       "No parking or stopping is permitted beyond this point.",
     ],
     answer: 0,
-},
+  },
   {
     id: 119,
     category: "Road Signs",
@@ -1360,15 +1362,17 @@ export const QUESTIONS_DB = [
     ],
     answer: 0,
   },
-  { // remove this question
+  {
+    // remove this question
     id: 123,
     category: "Road Signs",
     image: "/road signs/SADC_road_sign_R512.svg.png",
-    question: "Look at this road sign. What does it tell you about this road?",
+    question:
+      "This supplementary plate is displayed beneath a regulatory sign. What does it tell you about when that sign applies?",
     options: [
-      "This road has two-way traffic — keep to the left.",
-      "You are entering a one-way road where all traffic moves in the direction shown.",
-      "This is a priority road — you have right of way.",
+      "The primary sign applies at all times, day and night.",
+      "The primary sign applies during night-time hours.",
+      "The primary sign applies during daytime hours only.",
     ],
     answer: 1,
   },
@@ -1622,7 +1626,7 @@ export const QUESTIONS_DB = [
     category: "Road Signs",
     image: "/road signs/GS403.jpg",
     question: "Look at this guidance sign. What does it indicate?",
-   options: [
+    options: [
       "The road narrows by one lane on the left-hand side.",
       "An increase in the number of lanes from three to four ahead.",
       "A split in the road where the left lanes lead to a different freeway.",

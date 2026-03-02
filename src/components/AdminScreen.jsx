@@ -56,26 +56,26 @@ function AdminScreen({ setScreen }) {
         {/* Header */}
         <div className="admin-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px" }}>
           <div>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "#f0d080" }}>Admin Dashboard</h1>
-            <p style={{ color: "#8a7a60", fontSize: "13px", marginTop: "4px" }}>DrivePrep SA Control Panel</p>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "var(--secondary-gold)" }}>Admin Dashboard</h1>
+            <p style={{ color: "var(--text-muted)", fontSize: "13px", marginTop: "4px" }}>DrivePrep SA Control Panel</p>
           </div>
           <div className="admin-header-right" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "22px", color: "#f0d080", fontWeight: 700 }}>{activeCount}</div>
-              <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>ACTIVE</div>
+              <div style={{ fontSize: "22px", color: "var(--secondary-gold)", fontWeight: 700 }}>{activeCount}</div>
+              <div style={{ fontSize: "10px", color: "var(--text-muted)", letterSpacing: "1px" }}>ACTIVE</div>
             </div>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "22px", color: "#f0d080", fontWeight: 700 }}>{results.length}</div>
-              <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>TESTS DONE</div>
+              <div style={{ fontSize: "22px", color: "var(--secondary-gold)", fontWeight: 700 }}>{results.length}</div>
+              <div style={{ fontSize: "10px", color: "var(--text-muted)", letterSpacing: "1px" }}>TESTS DONE</div>
             </div>
-            <button onClick={() => { sessionStorage.removeItem("adminToken"); setScreen("home"); }} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#8a7a60", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>← Logout</button>
+            <button onClick={() => { sessionStorage.removeItem("adminToken"); setScreen("home"); }} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-muted)", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>← Logout</button>
           </div>
         </div>
 
         {/* Tabs */}
         <div style={{ display: "flex", gap: "4px", marginBottom: "24px", background: "rgba(255,255,255,0.04)", borderRadius: "10px", padding: "4px", width: "fit-content" }}>
           {["tickets", "results"].map(t => (
-            <button key={t} onClick={() => setTab(t)} className="btn" style={{ background: tab === t ? "rgba(201,168,76,0.2)" : "none", border: tab === t ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: tab === t ? "#f0d080" : "#8a7a60", padding: "8px 20px", borderRadius: "8px", fontSize: "13px", letterSpacing: "1px", textTransform: "capitalize" }}>
+            <button key={t} onClick={() => setTab(t)} className="btn" style={{ background: tab === t ? "rgba(201,168,76,0.2)" : "none", border: tab === t ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: tab === t ? "var(--secondary-gold)" : "var(--text-muted)", padding: "8px 20px", borderRadius: "8px", fontSize: "13px", letterSpacing: "1px", textTransform: "capitalize" }}>
               {t === "tickets" ? "🎫 Tickets" : "📊 Results"}
             </button>
           ))}
@@ -85,19 +85,19 @@ function AdminScreen({ setScreen }) {
           <div>
             {/* Create Ticket */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "12px", padding: "24px", marginBottom: "24px" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "#e8dcc8", marginBottom: "20px" }}>Create New Ticket</h3>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "var(--text-main)", marginBottom: "20px" }}>Create New Ticket</h3>
               <div className="ticket-form" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                <input value={name} onChange={e => setName(e.target.value)} placeholder="Client name / surname" style={{ flex: "1 1 200px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "12px 14px", color: "#e8dcc8", fontSize: "14px" }} />
-                <select value={days} onChange={e => setDays(e.target.value)} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "12px 14px", color: "#e8dcc8", fontSize: "14px" }}>
+                <input value={name} onChange={e => setName(e.target.value)} placeholder="Client name / surname" style={{ flex: "1 1 200px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "12px 14px", color: "var(--text-main)", fontSize: "14px" }} />
+                <select value={days} onChange={e => setDays(e.target.value)} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "12px 14px", color: "var(--text-main)", fontSize: "14px" }}>
                   <option value={3}>3 Days — R20</option>
                   <option value={7}>7 Days — R50</option>
                   <option value={30}>30 Days — R120</option>
                 </select>
-                <button onClick={createTicket} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 24px", borderRadius: "8px", fontSize: "14px", fontWeight: 700 }}>
+                <button onClick={createTicket} className="btn" style={{ background: "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", color: "var(--bg-dark)", padding: "12px 24px", borderRadius: "8px", fontSize: "14px", fontWeight: 700 }}>
                   Generate Ticket
                 </button>
               </div>
-              {msg && <p style={{ color: "#ff6b6b", fontSize: "13px", marginTop: "8px" }}>{msg}</p>}
+              {msg && <p style={{ color: "var(--accent-red)", fontSize: "13px", marginTop: "8px" }}>{msg}</p>}
             </div>
 
             {/* New Ticket Display */}
