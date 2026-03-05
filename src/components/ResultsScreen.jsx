@@ -18,7 +18,7 @@ function ResultsScreen({ result, setScreen }) {
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>
       <div className="fade-in">
         {/* Result Card */}
-        <div style={{ background: passed ? "rgba(107,255,184,0.06)" : "rgba(255,107,107,0.06)", border: `1px solid ${passed ? "rgba(107,255,184,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "20px", padding: "40px", textAlign: "center", marginBottom: "24px" }}>
+        <div style={{ background: passed ? "rgba(0,138,81,0.06)" : "rgba(226,35,26,0.05)", border: `1px solid ${passed ? "rgba(0,138,81,0.3)" : "rgba(226,35,26,0.3)"}`, borderRadius: "20px", padding: "40px", textAlign: "center", marginBottom: "24px" }}>
           <div style={{ fontSize: "64px", marginBottom: "16px" }}>{passed ? "🏆" : "📚"}</div>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "40px", color: passed ? "var(--accent-green)" : "var(--accent-red)", marginBottom: "8px" }}>{passed ? "PASS" : "FAIL"}</h1>
           <div style={{ fontSize: "56px", fontWeight: 900, color: "#0054A6", lineHeight: 1, marginBottom: "8px" }}>{pct}%</div>
@@ -27,7 +27,7 @@ function ResultsScreen({ result, setScreen }) {
         </div>
 
         {/* Category Breakdown */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "12px", padding: "24px", marginBottom: "20px" }}>
+        <div style={{ background: "#fafaf8", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "12px", padding: "24px", marginBottom: "20px" }}>
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "var(--text-main)", marginBottom: "20px" }}>Performance by Category</h3>
           {Object.entries(byCategory).map(([cat, data]) => {
             const cpct = Math.round((data.correct / data.total) * 100);
@@ -37,7 +37,7 @@ function ResultsScreen({ result, setScreen }) {
                   <span style={{ fontSize: "14px", color: "var(--text-main)" }}>{cat}</span>
                   <span style={{ fontSize: "14px", color: cpct >= PASS_MARK ? "var(--accent-green)" : "var(--accent-red)" }}>{data.correct}/{data.total} ({cpct}%)</span>
                 </div>
-                <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: "4px", height: "6px", overflow: "hidden" }}>
+                <div style={{ background: "#e8e4d9", borderRadius: "4px", height: "6px", overflow: "hidden" }}>
                   <div style={{ height: "100%", width: `${cpct}%`, background: cpct >= PASS_MARK ? "linear-gradient(90deg,var(--accent-green),#4dcca0)" : "linear-gradient(90deg,var(--accent-red),#ff4040)", borderRadius: "4px", transition: "width 0.6s" }} />
                 </div>
               </div>
@@ -64,7 +64,7 @@ function ResultsScreen({ result, setScreen }) {
             {questions.map((q, i) => {
               const correct = answers[q.id] === q.answer;
               return (
-                <div key={q.id} style={{ background: correct ? "rgba(107,255,184,0.04)" : "rgba(255,107,107,0.04)", border: `1px solid ${correct ? "rgba(107,255,184,0.15)" : "rgba(255,107,107,0.15)"}`, borderRadius: "10px", padding: "18px", marginBottom: "10px" }}>
+                <div key={q.id} style={{ background: correct ? "rgba(0,138,81,0.05)" : "rgba(226,35,26,0.05)", border: `1px solid ${correct ? "rgba(0,138,81,0.2)" : "rgba(226,35,26,0.2)"}`, borderRadius: "10px", padding: "18px", marginBottom: "10px" }}>
                   <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
                     <span style={{ color: correct ? "#008A51" : "#E2231A", fontWeight: 700 }}>{i + 1}.</span>
                     <p style={{ color: "#1A1A1B", fontSize: "14px", lineHeight: 1.5 }}>{q.question}</p>

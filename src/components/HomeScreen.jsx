@@ -60,14 +60,14 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
         </div>
 
         {/* Login Card */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "16px", padding: "36px", backdropFilter: "blur(10px)" }}>
+        <div style={{ background: "#f8f6f0", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "16px", padding: "36px", backdropFilter: "blur(10px)" }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "20px", color: "var(--text-main)", marginBottom: "24px" }}>Enter Your Ticket</h2>
           <input
             value={ticketInput}
             onChange={e => setTicketInput(e.target.value.toUpperCase())}
             onKeyDown={e => e.key === "Enter" && handleLogin()}
             placeholder="e.g. DP-AB34CD56"
-            style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "14px 16px", color: "#1A1A1B", fontSize: "18px", letterSpacing: "2px", fontFamily: "monospace", marginBottom: "12px" }}
+            style={{ width: "100%", background: "#ffffff", border: "1px solid rgba(201,168,76,0.5)", borderRadius: "8px", padding: "14px 16px", color: "#1A1A1B", fontSize: "18px", letterSpacing: "2px", fontFamily: "monospace", marginBottom: "12px" }}
           />
           <button onClick={handleLogin} disabled={loading || !ticketInput} className="btn" style={{ width: "100%", background: loading ? "#4a3d20" : "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", color: "var(--bg-dark)", padding: "14px", borderRadius: "8px", fontSize: "15px", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: "1px" }}>
             {loading ? "Verifying..." : "Start Practice Test →"}
@@ -84,7 +84,7 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
           ) : (
             <div style={{ display: "flex", gap: "8px" }}>
               <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
-                <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type={showPin ? "text" : "password"} placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "10px 40px 10px 14px", color: "var(--text-main)", fontSize: "14px", boxSizing: "border-box" }} />
+                <input value={adminInput} onChange={e => setAdminInput(e.target.value)} type={showPin ? "text" : "password"} placeholder="Admin PIN" onKeyDown={e => e.key === "Enter" && handleAdmin()} style={{ width: "100%", background: "#ffffff", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "10px 40px 10px 14px", color: "var(--text-main)", fontSize: "14px", boxSizing: "border-box" }} />
                 <button onClick={() => setShowPin(v => !v)} className="btn" tabIndex={-1} title={showPin ? "Hide PIN" : "Show PIN"} style={{ position: "absolute", right: "8px", background: "none", border: "none", padding: "4px", cursor: "pointer", color: "var(--text-muted)", fontSize: "15px", lineHeight: 1 }}>
                   {showPin ? "🙈" : "👁"}
                 </button>
