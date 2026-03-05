@@ -31,17 +31,17 @@ export default function App() {
   };
 
   return (
-    <div style={{ fontFamily: "'Source Sans 3', sans-serif", minHeight: "100vh", background: "var(--bg-dark)", color: "var(--text-main)" }}>
+    <div style={{ fontFamily: "'Source Sans 3', sans-serif", minHeight: "100vh", background: "#ffffff", color: "var(--text-main)" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg-dark); }
+        body { background: #ffffff; }
         .btn { cursor: pointer; border: none; transition: all 0.2s; }
         .btn:hover { transform: translateY(-1px); }
         .btn:active { transform: translateY(0); }
         input, select { outline: none; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: var(--primary-gold); border-radius: 3px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }

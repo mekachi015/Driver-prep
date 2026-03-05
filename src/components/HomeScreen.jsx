@@ -55,7 +55,7 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
           <div style={{ display: "flex", background: "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", borderRadius: "50%", width: "72px", height: "72px", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: "0 0 40px rgba(201,168,76,0.4)" }}>
             <span style={{ fontSize: "32px" }}>🚗</span>
           </div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "36px", fontWeight: 900, color: "var(--secondary-gold)", letterSpacing: "-1px", lineHeight: 1 }}>DrivePrep SA</h1>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "36px", fontWeight: 900, color: "#0054A6", letterSpacing: "-1px", lineHeight: 1 }}>DrivePrep SA</h1>
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "13px", color: "var(--text-muted)", marginTop: "8px", letterSpacing: "3px", textTransform: "uppercase" }}>K53 Learner's Licence Practice</p>
         </div>
 
@@ -67,7 +67,7 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
             onChange={e => setTicketInput(e.target.value.toUpperCase())}
             onKeyDown={e => e.key === "Enter" && handleLogin()}
             placeholder="e.g. DP-AB34CD56"
-            style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "14px 16px", color: "var(--secondary-gold)", fontSize: "18px", letterSpacing: "2px", fontFamily: "monospace", marginBottom: "12px" }}
+            style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(201,168,76,0.3)", borderRadius: "8px", padding: "14px 16px", color: "#1A1A1B", fontSize: "18px", letterSpacing: "2px", fontFamily: "monospace", marginBottom: "12px" }}
           />
           <button onClick={handleLogin} disabled={loading || !ticketInput} className="btn" style={{ width: "100%", background: loading ? "#4a3d20" : "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", color: "var(--bg-dark)", padding: "14px", borderRadius: "8px", fontSize: "15px", fontWeight: 700, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: "1px" }}>
             {loading ? "Verifying..." : "Start Practice Test →"}
@@ -89,12 +89,12 @@ function HomeScreen({ setScreen, setCurrentTicket }) {
                   {showPin ? "🙈" : "👁"}
                 </button>
               </div>
-              <button onClick={handleAdmin} disabled={loading} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "var(--secondary-gold)", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>{loading ? "..." : "Enter"}</button>
+              <button onClick={handleAdmin} disabled={loading} className="btn" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)", color: "#0054A6", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>{loading ? "..." : "Enter"}</button>
             </div>
           )}
         </div>
 
-        <p style={{ textAlign: "center", fontSize: "11px", color: "#4a3d20", marginTop: "32px", letterSpacing: "1px" }}>
+        <p style={{ textAlign: "center", fontSize: "11px", color: "#888888", marginTop: "32px", letterSpacing: "1px" }}>
           © 2026 DrivePrep SA
         </p>
       </div>

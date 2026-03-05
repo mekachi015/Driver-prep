@@ -178,20 +178,20 @@ function AdminScreen({ setScreen }) {
         {/* Header */}
         <div className="admin-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px" }}>
           <div>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "var(--secondary-gold)" }}>Admin Dashboard</h1>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "28px", color: "#0054A6" }}>Admin Dashboard</h1>
             <p style={{ color: "var(--text-muted)", fontSize: "13px", marginTop: "4px" }}>DrivePrep SA Control Panel</p>
           </div>
           <div className="admin-header-right" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "22px", color: "var(--secondary-gold)", fontWeight: 700 }}>{activeCount}</div>
+              <div style={{ fontSize: "22px", color: "#0054A6", fontWeight: 700 }}>{activeCount}</div>
               <div style={{ fontSize: "10px", color: "var(--text-muted)", letterSpacing: "1px" }}>ACTIVE</div>
             </div>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "22px", color: "var(--secondary-gold)", fontWeight: 700 }}>{results.length}</div>
+              <div style={{ fontSize: "22px", color: "#0054A6", fontWeight: 700 }}>{results.length}</div>
               <div style={{ fontSize: "10px", color: "var(--text-muted)", letterSpacing: "1px" }}>TESTS DONE</div>
             </div>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "22px", color: "var(--secondary-gold)", fontWeight: 700 }}>{totalQCount}</div>
+              <div style={{ fontSize: "22px", color: "#0054A6", fontWeight: 700 }}>{totalQCount}</div>
               <div style={{ fontSize: "10px", color: "var(--text-muted)", letterSpacing: "1px" }}>QUESTIONS</div>
             </div>
             <button onClick={() => { sessionStorage.removeItem("adminToken"); setScreen("home"); }} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-muted)", padding: "10px 16px", borderRadius: "8px", fontSize: "13px" }}>← Logout</button>
@@ -201,7 +201,7 @@ function AdminScreen({ setScreen }) {
         {/* Tabs */}
         <div style={{ display: "flex", gap: "4px", marginBottom: "24px", background: "rgba(255,255,255,0.04)", borderRadius: "10px", padding: "4px", width: "fit-content", flexWrap: "wrap" }}>
           {["tickets", "results", "questions"].map(t => (
-            <button key={t} onClick={() => setTab(t)} className="btn" style={{ background: tab === t ? "rgba(201,168,76,0.2)" : "none", border: tab === t ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: tab === t ? "var(--secondary-gold)" : "var(--text-muted)", padding: "8px 20px", borderRadius: "8px", fontSize: "13px", letterSpacing: "1px", textTransform: "capitalize" }}>
+            <button key={t} onClick={() => setTab(t)} className="btn" style={{ background: tab === t ? "rgba(201,168,76,0.2)" : "none", border: tab === t ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: tab === t ? "#0054A6" : "var(--text-muted)", padding: "8px 20px", borderRadius: "8px", fontSize: "13px", letterSpacing: "1px", textTransform: "capitalize" }}>
               {t === "tickets" ? "🎫 Tickets" : t === "results" ? "📊 Results" : "📝 Questions"}
             </button>
           ))}
@@ -229,14 +229,14 @@ function AdminScreen({ setScreen }) {
             {/* New Ticket Display */}
             {newTicket && (
               <div className="fade-in" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.4)", borderRadius: "12px", padding: "20px", marginBottom: "24px" }}>
-                <p style={{ color: "#8a7a60", fontSize: "12px", letterSpacing: "2px", marginBottom: "8px" }}>NEW TICKET GENERATED — SEND TO CLIENT</p>
+                <p style={{ color: "#5a5a5a", fontSize: "12px", letterSpacing: "2px", marginBottom: "8px" }}>NEW TICKET GENERATED — SEND TO CLIENT</p>
                 <div style={{ display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: "monospace", fontSize: "28px", color: "#f0d080", letterSpacing: "3px", fontWeight: 700 }}>{newTicket.num}</span>
-                  <div style={{ color: "#e8dcc8", fontSize: "14px" }}>
-                    <span style={{ color: "#8a7a60" }}>Client: </span>{newTicket.name} &nbsp;·&nbsp;
-                    <span style={{ color: "#8a7a60" }}>Access: </span>{newTicket.days} days &nbsp;·&nbsp;
-                    <span style={{ color: "#8a7a60" }}>Expires: </span>{newTicket.expiry} &nbsp;·&nbsp;
-                    <span style={{ color: "#8a7a60" }}>Price: </span>{prices[newTicket.days] || ""}
+                  <span style={{ fontFamily: "monospace", fontSize: "28px", color: "#0054A6", letterSpacing: "3px", fontWeight: 700 }}>{newTicket.num}</span>
+                  <div style={{ color: "#1A1A1B", fontSize: "14px" }}>
+                    <span style={{ color: "#5a5a5a" }}>Client: </span>{newTicket.name} &nbsp;·&nbsp;
+                    <span style={{ color: "#5a5a5a" }}>Access: </span>{newTicket.days} days &nbsp;·&nbsp;
+                    <span style={{ color: "#5a5a5a" }}>Expires: </span>{newTicket.expiry} &nbsp;·&nbsp;
+                    <span style={{ color: "#5a5a5a" }}>Price: </span>{prices[newTicket.days] || ""}
                   </div>
                 </div>
               </div>
@@ -244,20 +244,20 @@ function AdminScreen({ setScreen }) {
 
             {/* Tickets List */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.1)", borderRadius: "12px", overflow: "hidden" }}>
-              <div className="admin-row-tickets" style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", color: "#8a7a60", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
+              <div className="admin-row-tickets" style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", color: "#5a5a5a", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
                 <span>Ticket</span><span>Client</span><span className="hide-sm">Days</span><span>Expires</span><span>Action</span>
               </div>
-              {Object.entries(tickets).length === 0 && <p style={{ padding: "24px", color: "#4a3d20", textAlign: "center" }}>No tickets yet. Create one above.</p>}
+              {Object.entries(tickets).length === 0 && <p style={{ padding: "24px", color: "#888888", textAlign: "center" }}>No tickets yet. Create one above.</p>}
               {Object.entries(tickets).reverse().map(([key, val]) => {
                 const expired = isExpired(val.expiry);
                 return (
                   <div key={key} className="admin-row-tickets" style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr auto", gap: "8px", alignItems: "center", opacity: expired ? 0.5 : 1 }}>
-                    <span style={{ fontFamily: "monospace", color: "#f0d080", fontSize: "13px" }}>{key}</span>
-                    <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{val.name}</span>
-                    <span className="hide-sm" style={{ fontSize: "14px", color: "#8a7a60" }}>{val.days}d</span>
-                    <span style={{ fontSize: "13px", color: expired ? "#ff6b6b" : "#6bffb8" }}>{val.expiry} {expired ? "✗" : "✓"}</span>
-                    {!expired && <button onClick={() => deactivate(key)} className="btn" style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.3)", color: "#ff6b6b", padding: "6px 12px", borderRadius: "6px", fontSize: "11px" }}>Deactivate</button>}
-                    {expired && <span style={{ fontSize: "11px", color: "#4a3d20" }}>Expired</span>}
+                    <span style={{ fontFamily: "monospace", color: "#0054A6", fontSize: "13px" }}>{key}</span>
+                    <span style={{ fontSize: "14px", color: "#1A1A1B" }}>{val.name}</span>
+                    <span className="hide-sm" style={{ fontSize: "14px", color: "#5a5a5a" }}>{val.days}d</span>
+                    <span style={{ fontSize: "13px", color: expired ? "#E2231A" : "#008A51" }}>{val.expiry} {expired ? "✗" : "✓"}</span>
+                    {!expired && <button onClick={() => deactivate(key)} className="btn" style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.3)", color: "#E2231A", padding: "6px 12px", borderRadius: "6px", fontSize: "11px" }}>Deactivate</button>}
+                    {expired && <span style={{ fontSize: "11px", color: "#888888" }}>Expired</span>}
                   </div>
                 );
               })}
@@ -267,17 +267,17 @@ function AdminScreen({ setScreen }) {
 
         {tab === "results" && (
           <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.1)", borderRadius: "12px", overflow: "hidden" }}>
-            <div className="admin-row-results" style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", color: "#8a7a60", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
+            <div className="admin-row-results" style={{ padding: "16px 24px", borderBottom: "1px solid rgba(201,168,76,0.1)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", color: "#5a5a5a", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>
               <span className="hide-sm">Date</span><span>Client</span><span className="hide-sm">Ticket</span><span>Score</span><span>Result</span>
             </div>
-            {results.length === 0 && <p style={{ padding: "24px", color: "#4a3d20", textAlign: "center" }}>No test results yet.</p>}
+            {results.length === 0 && <p style={{ padding: "24px", color: "#888888", textAlign: "center" }}>No test results yet.</p>}
             {[...results].reverse().map((r, i) => (
               <div key={i} className="admin-row-results" style={{ padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: "8px", alignItems: "center" }}>
-                <span className="hide-sm" style={{ fontSize: "12px", color: "#8a7a60" }}>{r.date}</span>
-                <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{r.name}</span>
-                <span className="hide-sm" style={{ fontFamily: "monospace", fontSize: "12px", color: "#f0d080" }}>{r.ticket}</span>
-                <span style={{ fontSize: "14px", color: "#e8dcc8" }}>{r.score}/{r.total} ({r.pct}%)</span>
-                <span style={{ color: r.passed ? "#6bffb8" : "#ff6b6b", fontSize: "13px", fontWeight: 700 }}>{r.passed ? "PASS ✓" : "FAIL ✗"}</span>
+                <span className="hide-sm" style={{ fontSize: "12px", color: "#5a5a5a" }}>{r.date}</span>
+                <span style={{ fontSize: "14px", color: "#1A1A1B" }}>{r.name}</span>
+                <span className="hide-sm" style={{ fontFamily: "monospace", fontSize: "12px", color: "#0054A6" }}>{r.ticket}</span>
+                <span style={{ fontSize: "14px", color: "#1A1A1B" }}>{r.score}/{r.total} ({r.pct}%)</span>
+                <span style={{ color: r.passed ? "#008A51" : "#E2231A", fontSize: "13px", fontWeight: 700 }}>{r.passed ? "PASS ✓" : "FAIL ✗"}</span>
               </div>
             ))}
           </div>
@@ -289,12 +289,12 @@ function AdminScreen({ setScreen }) {
             {/* Delete confirmation modal */}
             {deleteConfirm && (
               <div style={{ position: "fixed", inset: 0, background: "rgba(10,15,30,0.92)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "20px" }}>
-                <div style={{ background: "#1a2438", border: "1px solid rgba(255,107,107,0.3)", borderRadius: "16px", padding: "32px", maxWidth: "400px", textAlign: "center" }}>
+                <div style={{ background: "#ffffff", border: "1px solid rgba(226,35,26,0.3)", borderRadius: "16px", padding: "32px", maxWidth: "400px", textAlign: "center" }}>
                   <div style={{ fontSize: "40px", marginBottom: "12px" }}>🗑️</div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--accent-red)", marginBottom: "10px" }}>Delete Question?</h3>
                   <p style={{ color: "var(--text-muted)", fontSize: "14px", marginBottom: "24px", lineHeight: 1.5 }}>This action cannot be undone.</p>
                   <div style={{ display: "flex", gap: "10px" }}>
-                    <button onClick={() => setDeleteConfirm(null)} className="btn" style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-main)", padding: "10px", borderRadius: "8px", fontSize: "14px" }}>Cancel</button>
+                    <button onClick={() => setDeleteConfirm(null)} className="btn" style={{ flex: 1, background: "#f3f4f6", border: "1px solid #d1d5db", color: "var(--text-main)", padding: "10px", borderRadius: "8px", fontSize: "14px" }}>Cancel</button>
                     <button onClick={() => confirmDelete(deleteConfirm)} className="btn" style={{ flex: 1, background: "rgba(255,107,107,0.15)", border: "1px solid rgba(255,107,107,0.4)", color: "var(--accent-red)", padding: "10px", borderRadius: "8px", fontSize: "14px", fontWeight: 700 }}>Delete</button>
                   </div>
                 </div>
@@ -334,8 +334,8 @@ function AdminScreen({ setScreen }) {
                   {qForm.options.map((opt, i) => (
                     <div key={i} style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
                       <input type="radio" id={`ans_${i}`} name="answer" checked={qForm.answer === i} onChange={() => setQForm(f => ({ ...f, answer: i }))} style={{ accentColor: "var(--primary-gold)", width: "16px", height: "16px", flexShrink: 0, cursor: "pointer" }} />
-                      <label htmlFor={`ans_${i}`} style={{ color: qForm.answer === i ? "var(--secondary-gold)" : "var(--text-muted)", fontSize: "13px", width: "22px", flexShrink: 0, cursor: "pointer", fontWeight: 700 }}>{["A","B","C","D"][i]}</label>
-                      <input value={opt} onChange={e => setOption(i, e.target.value)} placeholder={`Option ${["A","B","C","D"][i]}`} style={{ flex: 1, background: qForm.answer === i ? "rgba(201,168,76,0.08)" : "rgba(255,255,255,0.06)", border: `1px solid ${qForm.answer === i ? "rgba(201,168,76,0.4)" : "rgba(255,255,255,0.1)"}`, borderRadius: "8px", padding: "9px 12px", color: qForm.answer === i ? "var(--secondary-gold)" : "var(--text-main)", fontSize: "14px" }} />
+                      <label htmlFor={`ans_${i}`} style={{ color: qForm.answer === i ? "#0054A6" : "var(--text-muted)", fontSize: "13px", width: "22px", flexShrink: 0, cursor: "pointer", fontWeight: 700 }}>{["A","B","C","D"][i]}</label>
+                      <input value={opt} onChange={e => setOption(i, e.target.value)} placeholder={`Option ${["A","B","C","D"][i]}`} style={{ flex: 1, background: qForm.answer === i ? "rgba(201,168,76,0.08)" : "rgba(255,255,255,0.06)", border: `1px solid ${qForm.answer === i ? "rgba(201,168,76,0.4)" : "rgba(255,255,255,0.1)"}`, borderRadius: "8px", padding: "9px 12px", color: qForm.answer === i ? "#0054A6" : "var(--text-main)", fontSize: "14px" }} />
                       {qForm.options.length > 2 && <button onClick={() => removeOption(i)} className="btn" style={{ background: "rgba(255,107,107,0.08)", border: "1px solid rgba(255,107,107,0.2)", color: "var(--accent-red)", padding: "6px 10px", borderRadius: "6px", fontSize: "13px" }}>✕</button>}
                     </div>
                   ))}
@@ -347,7 +347,7 @@ function AdminScreen({ setScreen }) {
                   <label style={{ display: "block", fontSize: "11px", color: "var(--text-muted)", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px" }}>Image (optional)</label>
                   <div style={{ display: "flex", gap: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
                     <input value={qForm.image.startsWith("data:") ? "" : qForm.image} onChange={e => setQForm(f => ({ ...f, image: e.target.value }))} placeholder="Paste image URL (https://...)" style={{ flex: "1 1 200px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "9px 12px", color: "var(--text-main)", fontSize: "14px" }} />
-                    <label className="btn" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.3)", color: "var(--secondary-gold)", padding: "9px 14px", borderRadius: "8px", fontSize: "13px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                    <label className="btn" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.3)", color: "#0054A6", padding: "9px 14px", borderRadius: "8px", fontSize: "13px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
                       📁 Upload
                       <input type="file" accept="image/*" onChange={handleImageFile} style={{ display: "none" }} />
                     </label>
@@ -374,10 +374,10 @@ function AdminScreen({ setScreen }) {
             {/* Questions Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
               <div style={{ display: "flex", gap: "8px", background: "rgba(255,255,255,0.04)", borderRadius: "8px", padding: "3px" }}>
-                <button onClick={() => { setQSource("custom"); setQPage(1); }} className="btn" style={{ background: qSource === "custom" ? "rgba(201,168,76,0.2)" : "none", border: qSource === "custom" ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: qSource === "custom" ? "var(--secondary-gold)" : "var(--text-muted)", padding: "6px 14px", borderRadius: "6px", fontSize: "13px" }}>
+                <button onClick={() => { setQSource("custom"); setQPage(1); }} className="btn" style={{ background: qSource === "custom" ? "rgba(201,168,76,0.2)" : "none", border: qSource === "custom" ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: qSource === "custom" ? "#0054A6" : "var(--text-muted)", padding: "6px 14px", borderRadius: "6px", fontSize: "13px" }}>
                   Custom ({customQuestions.length})
                 </button>
-                <button onClick={() => { setQSource("builtin"); setQPage(1); }} className="btn" style={{ background: qSource === "builtin" ? "rgba(201,168,76,0.2)" : "none", border: qSource === "builtin" ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: qSource === "builtin" ? "var(--secondary-gold)" : "var(--text-muted)", padding: "6px 14px", borderRadius: "6px", fontSize: "13px" }}>
+                <button onClick={() => { setQSource("builtin"); setQPage(1); }} className="btn" style={{ background: qSource === "builtin" ? "rgba(201,168,76,0.2)" : "none", border: qSource === "builtin" ? "1px solid rgba(201,168,76,0.3)" : "1px solid transparent", color: qSource === "builtin" ? "#0054A6" : "var(--text-muted)", padding: "6px 14px", borderRadius: "6px", fontSize: "13px" }}>
                   Built-in ({QUESTIONS_DB.length})
                 </button>
               </div>
@@ -398,12 +398,12 @@ function AdminScreen({ setScreen }) {
             {/* Questions List */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.1)", borderRadius: "12px", overflow: "hidden" }}>
               {pagedList.length === 0 && (
-                <p style={{ padding: "32px", color: "#4a3d20", textAlign: "center" }}>
+                <p style={{ padding: "32px", color: "#888888", textAlign: "center" }}>
                   {qSource === "custom" ? "No custom questions yet. Add one above." : "No built-in questions match."}
                 </p>
               )}
               {pagedList.map((q, i) => {
-                const catColor = { "Road Signs": "var(--accent-green)", "Rules of the Road": "var(--secondary-gold)", "Vehicle Controls": "var(--accent-orange)" }[q.category] || "var(--text-muted)";
+                const catColor = { "Road Signs": "#008A51", "Rules of the Road": "#0054A6", "Vehicle Controls": "#d4600a" }[q.category] || "#5a5a5a";
                 const isExpanded = expandedQId === q.id;
                 const isBuiltin = qSource === "builtin";
                 return (
@@ -413,10 +413,10 @@ function AdminScreen({ setScreen }) {
                       onClick={() => setExpandedQId(isExpanded ? null : q.id)}
                       style={{ padding: "14px 20px", display: "flex", gap: "12px", alignItems: "flex-start", cursor: "pointer", transition: "background 0.15s", background: isExpanded ? "rgba(201,168,76,0.05)" : "transparent" }}
                     >
-                      <span style={{ color: "#4a3d20", fontSize: "12px", minWidth: "28px", paddingTop: "2px" }}>#{(qPage - 1) * PAGE_SIZE + i + 1}</span>
+                      <span style={{ color: "#888888", fontSize: "12px", minWidth: "28px", paddingTop: "2px" }}>#{(qPage - 1) * PAGE_SIZE + i + 1}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", gap: "8px", marginBottom: "4px", flexWrap: "wrap", alignItems: "center" }}>
-                          <span style={{ background: `rgba(${catColor === "var(--accent-green)" ? "107,255,184" : catColor === "var(--secondary-gold)" ? "240,208,128" : "255,159,107"},0.1)`, color: catColor, border: `1px solid ${catColor}30`, borderRadius: "20px", padding: "2px 8px", fontSize: "10px", letterSpacing: "1px", flexShrink: 0 }}>{q.category}</span>
+                          <span style={{ background: `rgba(${catColor === "#008A51" ? "0,138,81" : catColor === "#0054A6" ? "0,84,166" : "212,96,10"},0.1)`, color: catColor, border: `1px solid ${catColor}30`, borderRadius: "20px", padding: "2px 8px", fontSize: "10px", letterSpacing: "1px", flexShrink: 0 }}>{q.category}</span>
                           {q.source === "custom" && <span style={{ background: "rgba(107,255,184,0.08)", color: "var(--accent-green)", border: "1px solid rgba(107,255,184,0.2)", borderRadius: "20px", padding: "2px 8px", fontSize: "10px" }}>Custom</span>}
                           {q.image && <span style={{ fontSize: "12px" }} title="Has image">🖼️</span>}
                         </div>
@@ -426,7 +426,7 @@ function AdminScreen({ setScreen }) {
                       <div style={{ display: "flex", gap: "6px", flexShrink: 0, alignItems: "center" }}>
                         {!isBuiltin && (
                           <>
-                            <button onClick={(e) => { e.stopPropagation(); openEdit(q); }} className="btn" title="Edit" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.3)", color: "var(--secondary-gold)", padding: "6px 10px", borderRadius: "6px", fontSize: "13px" }}>✏️</button>
+                            <button onClick={(e) => { e.stopPropagation(); openEdit(q); }} className="btn" title="Edit" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.3)", color: "#0054A6", padding: "6px 10px", borderRadius: "6px", fontSize: "13px" }}>✏️</button>
                             <button onClick={(e) => { e.stopPropagation(); setDeleteConfirm(q.id); }} className="btn" title="Delete" style={{ background: "rgba(255,107,107,0.08)", border: "1px solid rgba(255,107,107,0.2)", color: "var(--accent-red)", padding: "6px 10px", borderRadius: "6px", fontSize: "13px" }}>🗑️</button>
                           </>
                         )}
@@ -455,7 +455,7 @@ function AdminScreen({ setScreen }) {
                           <button
                             onClick={(e) => { e.stopPropagation(); openCopyBuiltin(q); setExpandedQId(null); }}
                             className="btn"
-                            style={{ background: "rgba(201,168,76,0.12)", border: "1px solid rgba(201,168,76,0.35)", color: "var(--secondary-gold)", padding: "8px 16px", borderRadius: "7px", fontSize: "13px", fontWeight: 600 }}
+                            style={{ background: "rgba(201,168,76,0.12)", border: "1px solid rgba(201,168,76,0.35)", color: "#0054A6", padding: "8px 16px", borderRadius: "7px", fontSize: "13px", fontWeight: 600 }}
                           >
                             ✏️ Edit / Copy as Custom
                           </button>

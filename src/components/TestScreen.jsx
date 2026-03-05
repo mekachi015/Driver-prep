@@ -129,26 +129,26 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
   const progress = Object.keys(answers).length / (questions.length || 1);
   const q = questions[current];
 
-  if (isLoading) return <div style={{ padding: "40px", textAlign: "center", color: "var(--secondary-gold)", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Loading questions…</div>;
+  if (isLoading) return <div style={{ padding: "40px", textAlign: "center", color: "#0054A6", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Loading questions…</div>;
 
   if (!q) return null;
 
   const unansweredCount = questions.length - Object.keys(answers).length;
 
-  const catColors = { "Road Signs": "var(--accent-green)", "Rules of the Road": "var(--secondary-gold)", "Vehicle Controls": "var(--accent-orange)" };
+  const catColors = { "Road Signs": "#008A51", "Rules of the Road": "#0054A6", "Vehicle Controls": "#d4600a" };
 
   return (
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>
       {/* Exit Confirmation Modal */}
       {showExitConfirm && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-          <div style={{ background: "#0e1428", border: "1px solid rgba(255,107,107,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(226,35,26,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
             <div style={{ fontSize: "40px", marginBottom: "16px" }}>🚪</div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--secondary-gold)", fontSize: "20px", marginBottom: "12px" }}>Leave Current Test?</h3>
-            <p style={{ color: "#b0a080", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#0054A6", fontSize: "20px", marginBottom: "12px" }}>Leave Current Test?</h3>
+            <p style={{ color: "#444444", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
               Your progress <strong style={{ color: "var(--accent-red)" }}>will not be saved</strong> and you will be returned to the login screen.
             </p>
-            <p style={{ color: "#8a7a60", fontSize: "13px", marginBottom: "28px" }}>Are you sure you want to exit?</p>
+            <p style={{ color: "#5a5a5a", fontSize: "13px", marginBottom: "28px" }}>Are you sure you want to exit?</p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
               <button
                 onClick={() => setShowExitConfirm(false)}
@@ -172,13 +172,13 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
       {/* Warning Modal */}
       {showWarning && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-          <div style={{ background: "#0e1428", border: "1px solid rgba(201,168,76,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(201,168,76,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
             <div style={{ fontSize: "40px", marginBottom: "16px" }}>⚠️</div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#f0d080", fontSize: "20px", marginBottom: "12px" }}>Not All Questions Answered</h3>
-            <p style={{ color: "#b0a080", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
-              You have <strong style={{ color: "#ff9f6b" }}>{unansweredCount}</strong> unanswered {unansweredCount === 1 ? "question" : "questions"} remaining.
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#0054A6", fontSize: "20px", marginBottom: "12px" }}>Not All Questions Answered</h3>
+            <p style={{ color: "#444444", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
+              You have <strong style={{ color: "#d4600a" }}>{unansweredCount}</strong> unanswered {unansweredCount === 1 ? "question" : "questions"} remaining.
             </p>
-            <p style={{ color: "#8a7a60", fontSize: "13px", marginBottom: "28px" }}>Please answer all 30 questions before submitting.</p>
+            <p style={{ color: "#5a5a5a", fontSize: "13px", marginBottom: "28px" }}>Please answer all 30 questions before submitting.</p>
             <button
               onClick={() => setShowWarning(false)}
               className="btn"
@@ -193,17 +193,17 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
         {/* Top Bar */}
         <div className="test-topbar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
           <div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#f0d080" }}>Practice Test</h2>
-            <p style={{ fontSize: "13px", color: "#8a7a60" }}>Welcome, {ticket.name}</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#0054A6" }}>Practice Test</h2>
+            <p style={{ fontSize: "13px", color: "#5a5a5a" }}>Welcome, {ticket.name}</p>
           </div>
           <div className="test-topbar-counters" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <div style={{ background: timeLeft < 300 ? "rgba(255,107,107,0.15)" : "rgba(201,168,76,0.1)", border: `1px solid ${timeLeft < 300 ? "rgba(255,107,107,0.4)" : "rgba(201,168,76,0.3)"}`, borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontFamily: "monospace", fontSize: "20px", color: timeLeft < 300 ? "#ff6b6b" : "#f0d080", animation: timeLeft < 60 ? "pulse 1s infinite" : "none" }}>{mm}:{ss}</div>
-              <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>REMAINING</div>
+              <div style={{ fontFamily: "monospace", fontSize: "20px", color: timeLeft < 300 ? "#E2231A" : "#0054A6", animation: timeLeft < 60 ? "pulse 1s infinite" : "none" }}>{mm}:{ss}</div>
+              <div style={{ fontSize: "10px", color: "#5a5a5a", letterSpacing: "1px" }}>REMAINING</div>
             </div>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "20px", color: "#f0d080" }}>{Object.keys(answers).length}<span style={{ color: "#4a3d20" }}>/{questions.length}</span></div>
-              <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>ANSWERED</div>
+              <div style={{ fontSize: "20px", color: "#0054A6" }}>{Object.keys(answers).length}<span style={{ color: "#888888" }}>/{questions.length}</span></div>
+              <div style={{ fontSize: "10px", color: "#5a5a5a", letterSpacing: "1px" }}>ANSWERED</div>
             </div>
           </div>
         </div>
@@ -216,10 +216,10 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
         {/* Question */}
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "16px", padding: "32px", marginBottom: "20px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-            <span style={{ background: `rgba(${catColors[q.category] === "#6bffb8" ? "107,255,184" : catColors[q.category] === "#f0d080" ? "240,208,128" : "255,159,107"},0.1)`, color: catColors[q.category], border: `1px solid ${catColors[q.category]}40`, borderRadius: "20px", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>{q.category}</span>
-            <span style={{ color: "#4a3d20", fontSize: "13px" }}>Q{current + 1} of {questions.length}</span>
+            <span style={{ background: `rgba(${catColors[q.category] === "#008A51" ? "0,138,81" : catColors[q.category] === "#0054A6" ? "0,84,166" : "212,96,10"},0.1)`, color: catColors[q.category], border: `1px solid ${catColors[q.category]}40`, borderRadius: "20px", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>{q.category}</span>
+            <span style={{ color: "#888888", fontSize: "13px" }}>Q{current + 1} of {questions.length}</span>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", lineHeight: 1.6, color: "#e8dcc8", marginBottom: q.image ? "20px" : "28px" }}>{q.question}</p>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", lineHeight: 1.6, color: "#1A1A1B", marginBottom: q.image ? "20px" : "28px" }}>{q.question}</p>
 
           {q.image && (
             <div style={{ marginBottom: "24px", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(201,168,76,0.25)", background: "rgba(0,0,0,0.3)" }}>
@@ -228,7 +228,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
                 alt="Vehicle controls diagram"
                 style={{ width: "100%", maxHeight: "320px", objectFit: "contain", display: "block", padding: "12px" }}
               />
-              <div style={{ padding: "6px 12px 8px", fontSize: "11px", color: "#8a7a60", letterSpacing: "1px", textTransform: "uppercase", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
+              <div style={{ padding: "6px 12px 8px", fontSize: "11px", color: "#5a5a5a", letterSpacing: "1px", textTransform: "uppercase", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
                 Vehicle Controls Diagram — refer to this image to answer the question
               </div>
             </div>
@@ -239,7 +239,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
               const selected = answers[q.id] === i;
               const labels = ["A", "B", "C", "D"];
               return (
-                <button key={i} onClick={() => setAnswers(a => { const next = { ...a, [q.id]: i }; answersRef.current = next; return next; })} className="btn" style={{ background: selected ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${selected ? "rgba(201,168,76,0.5)" : "rgba(255,255,255,0.08)"}`, borderRadius: "10px", padding: "14px 18px", textAlign: "left", color: selected ? "#f0d080" : "#e8dcc8", fontSize: "15px", display: "flex", alignItems: "center", gap: "12px" }}>
+                <button key={i} onClick={() => setAnswers(a => { const next = { ...a, [q.id]: i }; answersRef.current = next; return next; })} className="btn" style={{ background: selected ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${selected ? "rgba(201,168,76,0.5)" : "rgba(255,255,255,0.08)"}`, borderRadius: "10px", padding: "14px 18px", textAlign: "left", color: selected ? "#0054A6" : "#1A1A1B", fontSize: "15px", display: "flex", alignItems: "center", gap: "12px" }}>
                   <span style={{ background: selected ? "rgba(201,168,76,0.2)" : "rgba(255,255,255,0.06)", border: `1px solid ${selected ? "#c9a84c" : "rgba(255,255,255,0.1)"}`, borderRadius: "50%", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>{labels[i]}</span>
                   {opt}
                 </button>
@@ -251,8 +251,8 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
         {/* Navigation */}
         <div style={{ display: "flex", gap: "12px", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", gap: "8px" }}>
-            <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === 0 ? 0.4 : 1 }}>← Prev</button>
-            <button onClick={() => setCurrent(c => Math.min(questions.length - 1, c + 1))} disabled={current === questions.length - 1} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === questions.length - 1 ? 0.4 : 1 }}>Next →</button>
+            <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0} className="btn" style={{ background: "#f3f4f6", border: "1px solid #d1d5db", color: "#5a5a5a", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === 0 ? 0.4 : 1 }}>← Prev</button>
+            <button onClick={() => setCurrent(c => Math.min(questions.length - 1, c + 1))} disabled={current === questions.length - 1} className="btn" style={{ background: "#f3f4f6", border: "1px solid #d1d5db", color: "#5a5a5a", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === questions.length - 1 ? 0.4 : 1 }}>Next →</button>
           </div>
           <div style={{ display: "flex", gap: "10px" }}>
             <button onClick={() => setShowExitConfirm(true)} className="btn" style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.35)", color: "var(--accent-red)", padding: "12px 20px", borderRadius: "8px", fontSize: "15px", fontWeight: 600 }}>
@@ -267,7 +267,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
         {/* Question Grid */}
         <div style={{ marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
           {questions.map((q2, i) => (
-            <button key={i} onClick={() => setCurrent(i)} className="btn" style={{ width: "36px", height: "36px", borderRadius: "6px", background: i === current ? "rgba(201,168,76,0.3)" : answers[q2.id] !== undefined ? "rgba(107,255,184,0.15)" : "rgba(255,255,255,0.05)", border: `1px solid ${i === current ? "#c9a84c" : answers[q2.id] !== undefined ? "rgba(107,255,184,0.3)" : "rgba(255,255,255,0.08)"}`, color: i === current ? "#f0d080" : answers[q2.id] !== undefined ? "#6bffb8" : "#4a3d20", fontSize: "12px", fontWeight: 700 }}>{i + 1}</button>
+            <button key={i} onClick={() => setCurrent(i)} className="btn" style={{ width: "36px", height: "36px", borderRadius: "6px", background: i === current ? "rgba(201,168,76,0.3)" : answers[q2.id] !== undefined ? "rgba(107,255,184,0.15)" : "rgba(255,255,255,0.05)", border: `1px solid ${i === current ? "#c9a84c" : answers[q2.id] !== undefined ? "rgba(107,255,184,0.3)" : "rgba(255,255,255,0.08)"}`, color: i === current ? "#0054A6" : answers[q2.id] !== undefined ? "#008A51" : "#888888", fontSize: "12px", fontWeight: 700 }}>{i + 1}</button>
           ))}
         </div>
       </div>

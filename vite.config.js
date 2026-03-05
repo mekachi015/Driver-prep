@@ -32,8 +32,9 @@ export default defineConfig(({ mode }) => {
             }
           };
 
-          server.middlewares.use('/api/tickets', handle('tickets', {}));
-          server.middlewares.use('/api/results', handle('results', []));
+          server.middlewares.use('/api/tickets',   handle('tickets',   {}));
+          server.middlewares.use('/api/results',   handle('results',   []));
+          server.middlewares.use('/api/questions', handle('questions', []));
 
           server.middlewares.use('/api/admin-login', (req, res) => {
             if (req.method !== 'POST') { res.statusCode = 405; res.end(); return; }

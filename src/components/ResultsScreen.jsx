@@ -21,7 +21,7 @@ function ResultsScreen({ result, setScreen }) {
         <div style={{ background: passed ? "rgba(107,255,184,0.06)" : "rgba(255,107,107,0.06)", border: `1px solid ${passed ? "rgba(107,255,184,0.3)" : "rgba(255,107,107,0.3)"}`, borderRadius: "20px", padding: "40px", textAlign: "center", marginBottom: "24px" }}>
           <div style={{ fontSize: "64px", marginBottom: "16px" }}>{passed ? "🏆" : "📚"}</div>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "40px", color: passed ? "var(--accent-green)" : "var(--accent-red)", marginBottom: "8px" }}>{passed ? "PASS" : "FAIL"}</h1>
-          <div style={{ fontSize: "56px", fontWeight: 900, color: "var(--secondary-gold)", lineHeight: 1, marginBottom: "8px" }}>{pct}%</div>
+          <div style={{ fontSize: "56px", fontWeight: 900, color: "#0054A6", lineHeight: 1, marginBottom: "8px" }}>{pct}%</div>
           <div style={{ color: "var(--text-muted)", fontSize: "16px" }}>Score: {score} / {total} correct</div>
           <div style={{ color: "var(--text-muted)", fontSize: "13px", marginTop: "8px" }}>Pass mark: {PASS_MARK}% &nbsp;·&nbsp; {passed ? "Well done!" : `You need ${PASS_MARK}% to pass. Keep practising!`}</div>
         </div>
@@ -47,13 +47,13 @@ function ResultsScreen({ result, setScreen }) {
 
         {/* Actions */}
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "24px" }}>
-          <button onClick={() => setShowReview(!showReview)} className="btn" style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-main)", padding: "12px", borderRadius: "8px", fontSize: "14px" }}>
+          <button onClick={() => setShowReview(!showReview)} className="btn" style={{ flex: 1, background: "#f3f4f6", border: "1px solid #d1d5db", color: "var(--text-main)", padding: "12px", borderRadius: "8px", fontSize: "14px" }}>
             {showReview ? "Hide" : "Review"} Answers
           </button>
           <button onClick={() => setScreen("test")} className="btn" style={{ flex: 1, background: "linear-gradient(135deg, var(--primary-gold), var(--secondary-gold))", color: "var(--bg-dark)", padding: "12px", borderRadius: "8px", fontSize: "14px", fontWeight: 700 }}>
             Take Another Test →
           </button>
-          <button onClick={() => setScreen("home")} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-muted)", padding: "12px 20px", borderRadius: "8px", fontSize: "14px" }}>
+          <button onClick={() => setScreen('home')} className="btn" style={{ background: "#f3f4f6", border: "1px solid #d1d5db", color: "var(--text-muted)", padding: "12px 20px", borderRadius: "8px", fontSize: "14px" }}>
             Logout
           </button>
         </div>
@@ -66,8 +66,8 @@ function ResultsScreen({ result, setScreen }) {
               return (
                 <div key={q.id} style={{ background: correct ? "rgba(107,255,184,0.04)" : "rgba(255,107,107,0.04)", border: `1px solid ${correct ? "rgba(107,255,184,0.15)" : "rgba(255,107,107,0.15)"}`, borderRadius: "10px", padding: "18px", marginBottom: "10px" }}>
                   <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-                    <span style={{ color: correct ? "#6bffb8" : "#ff6b6b", fontWeight: 700 }}>{i + 1}.</span>
-                    <p style={{ color: "#e8dcc8", fontSize: "14px", lineHeight: 1.5 }}>{q.question}</p>
+                    <span style={{ color: correct ? "#008A51" : "#E2231A", fontWeight: 700 }}>{i + 1}.</span>
+                    <p style={{ color: "#1A1A1B", fontSize: "14px", lineHeight: 1.5 }}>{q.question}</p>
                   </div>
                   {q.image && (
                     <div style={{ marginBottom: "12px", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(201,168,76,0.2)", background: "rgba(0,0,0,0.3)" }}>
@@ -78,7 +78,7 @@ function ResultsScreen({ result, setScreen }) {
                     const isCorrectOpt = j === q.answer;
                     const isUserChoice = j === answers[q.id];
                     return (
-                      <div key={j} style={{ padding: "6px 10px", borderRadius: "6px", marginBottom: "4px", background: isCorrectOpt ? "rgba(107,255,184,0.1)" : isUserChoice && !isCorrectOpt ? "rgba(255,107,107,0.1)" : "transparent", color: isCorrectOpt ? "#6bffb8" : isUserChoice && !isCorrectOpt ? "#ff6b6b" : "#4a3d20", fontSize: "13px", display: "flex", gap: "8px" }}>
+                      <div key={j} style={{ padding: "6px 10px", borderRadius: "6px", marginBottom: "4px", background: isCorrectOpt ? "rgba(0,138,81,0.08)" : isUserChoice && !isCorrectOpt ? "rgba(226,35,26,0.08)" : "transparent", color: isCorrectOpt ? "#008A51" : isUserChoice && !isCorrectOpt ? "#E2231A" : "#888888", fontSize: "13px", display: "flex", gap: "8px" }}>
                         <span>{["A","B","C","D"][j]}.</span>
                         <span>{opt}</span>
                         {isCorrectOpt && <span style={{ marginLeft: "auto" }}>✓ Correct</span>}
