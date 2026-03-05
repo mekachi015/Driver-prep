@@ -1,46 +1,98 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { QUESTIONS_DB } from "../data/questions";
-import { getResults, saveResults } from "../utils/storage";
+import { getCustomQuestions, getResults, saveResults } from "../utils/storage";
 import { shuffle } from "../utils/helpers";
 import { PASS_MARK } from "../constants";
 
 
 function TestScreen({ ticket, setScreen, setTestResult }) {
+  const SESSION_KEY = `testSession_${ticket.number}`;
+
+  const persistSession = useCallback((qs, ans, cur, endTime) => {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      questionIds: qs.map(q => q.id),
+      answers: ans,
+      current: cur,
+      endTime,
+    }));
+  }, [SESSION_KEY]);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [current, setCurrent] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30 * 60);
+  const [showWarning, setShowWarning] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  const exitTest = useCallback(() => {
+    clearInterval(timerRef.current);
+    localStorage.removeItem(SESSION_KEY);
+    setScreen("home");
+  }, [SESSION_KEY, setScreen]);
+
   const timerRef = useRef(null);
   const answersRef = useRef({});
   const questionsRef = useRef([]);
   const submittedRef = useRef(false);
+  const endTimeRef = useRef(null);
+  const timeLeftRef = useRef(30 * 60);
 
+  // Fetch custom questions and merge with the static DB, then restore a
+  // saved session or build a fresh 30-question set.
   useEffect(() => {
-    const q = shuffle(QUESTIONS_DB).slice(0, 30);
-    setQuestions(q);
-    questionsRef.current = q;
-    timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          clearInterval(timerRef.current);
-          return 0;
+    getCustomQuestions().then(customQs => {
+      const pool = [...QUESTIONS_DB, ...customQs];
+      const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+      if (saved) {
+        const reconstructed = saved.questionIds
+          .map(id => pool.find(qq => String(qq.id) === String(id)))
+          .filter(Boolean);
+        if (reconstructed.length === 30) {
+          const tl = Math.max(0, Math.floor((saved.endTime - Date.now()) / 1000));
+          questionsRef.current = reconstructed;
+          answersRef.current = saved.answers || {};
+          endTimeRef.current = saved.endTime;
+          timeLeftRef.current = tl;
+          setQuestions(reconstructed);
+          setAnswers(saved.answers || {});
+          setCurrent(saved.current || 0);
+          setTimeLeft(tl);
+          setIsLoading(false);
+          return;
         }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, []);
+      }
+      // No valid saved session — create a new one from the merged pool.
+      const q = shuffle(pool).slice(0, 30);
+      const endTime = Date.now() + 30 * 60 * 1000;
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        questionIds: q.map(qq => qq.id),
+        answers: {},
+        current: 0,
+        endTime,
+      }));
+      questionsRef.current = q;
+      answersRef.current = {};
+      endTimeRef.current = endTime;
+      timeLeftRef.current = 30 * 60;
+      setQuestions(q);
+      setIsLoading(false);
+    });
+  }, [SESSION_KEY]);
 
-  useEffect(() => {
-    if (timeLeft === 0 && !submittedRef.current) {
-      handleSubmit(questionsRef.current, answersRef.current);
-    }
-  }, [timeLeft]);
-
-  const handleSubmit = async (qs = questionsRef.current, ans = answersRef.current) => {
+  const submitTest = useCallback(async (forceSubmit = false) => {
     if (submittedRef.current) return;
+    const qs = questionsRef.current;
+    const ans = answersRef.current;
+
+    if (!forceSubmit && Object.keys(ans).length < qs.length) {
+      setShowWarning(true);
+      return;
+    }
+
     submittedRef.current = true;
     clearInterval(timerRef.current);
+    localStorage.removeItem(SESSION_KEY);
     const score = qs.reduce((acc, q) => acc + (ans[q.id] === q.answer ? 1 : 0), 0);
     const pct = Math.round((score / qs.length) * 100);
     const passed = pct >= PASS_MARK;
@@ -49,50 +101,125 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
     await saveResults([...prev, { score, total: qs.length, pct, passed, ticket: ticket.number, name: ticket.name, date: result.date }]);
     setTestResult(result);
     setScreen("results");
-  };
+  }, [SESSION_KEY, ticket, setTestResult, setScreen]);
+
+  // Start the timer once questions are loaded; auto-submits when time expires.
+  useEffect(() => {
+    if (isLoading) return;
+    timerRef.current = setInterval(() => {
+      timeLeftRef.current -= 1;
+      setTimeLeft(timeLeftRef.current);
+      if (timeLeftRef.current <= 0 && !submittedRef.current) {
+        clearInterval(timerRef.current);
+        submitTest(true);
+      }
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [isLoading, submitTest]);
+
+  // Persist session whenever answers or current question index change
+  useEffect(() => {
+    if (questionsRef.current.length > 0 && endTimeRef.current) {
+      persistSession(questionsRef.current, answers, current, endTimeRef.current);
+    }
+  }, [answers, current, persistSession]);
 
   const mm = String(Math.floor(timeLeft / 60)).padStart(2, "0");
   const ss = String(timeLeft % 60).padStart(2, "0");
   const progress = Object.keys(answers).length / (questions.length || 1);
   const q = questions[current];
 
-  if (!q) return <div style={{ padding: "40px", textAlign: "center", color: "#f0d080" }}>Loading questions...</div>;
+  if (isLoading) return <div style={{ padding: "40px", textAlign: "center", color: "#0054A6", fontFamily: "'Playfair Display', serif", fontSize: "18px" }}>Loading questions…</div>;
 
-  const catColors = { "Road Signs": "#6bffb8", "Rules of the Road": "#f0d080", "Vehicle Controls": "#ff9f6b" };
+  if (!q) return null;
+
+  const unansweredCount = questions.length - Object.keys(answers).length;
+
+  const catColors = { "Road Signs": "#008A51", "Rules of the Road": "#0054A6", "Vehicle Controls": "#d4600a" };
 
   return (
     <div style={{ minHeight: "100vh", padding: "24px", maxWidth: "780px", margin: "0 auto" }}>
+      {/* Exit Confirmation Modal */}
+      {showExitConfirm && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(226,35,26,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>🚪</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#0054A6", fontSize: "20px", marginBottom: "12px" }}>Leave Current Test?</h3>
+            <p style={{ color: "#444444", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
+              Your progress <strong style={{ color: "var(--accent-red)" }}>will not be saved</strong> and you will be returned to the login screen.
+            </p>
+            <p style={{ color: "#5a5a5a", fontSize: "13px", marginBottom: "28px" }}>Are you sure you want to exit?</p>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowExitConfirm(false)}
+                className="btn"
+                style={{ background: "#f3f4f6", border: "1px solid #d1d5db", color: "var(--text-main)", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 600 }}
+              >
+                Stay in Test
+              </button>
+              <button
+                onClick={exitTest}
+                className="btn"
+                style={{ background: "linear-gradient(135deg, #c0392b, #ff6b6b)", color: "#fff", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}
+              >
+                Exit Test
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Warning Modal */}
+      {showWarning && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(201,168,76,0.4)", borderRadius: "16px", padding: "36px 40px", maxWidth: "420px", width: "90%", textAlign: "center" }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>⚠️</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#0054A6", fontSize: "20px", marginBottom: "12px" }}>Not All Questions Answered</h3>
+            <p style={{ color: "#444444", fontSize: "15px", lineHeight: 1.6, marginBottom: "8px" }}>
+              You have <strong style={{ color: "#d4600a" }}>{unansweredCount}</strong> unanswered {unansweredCount === 1 ? "question" : "questions"} remaining.
+            </p>
+            <p style={{ color: "#5a5a5a", fontSize: "13px", marginBottom: "28px" }}>Please answer all 30 questions before submitting.</p>
+            <button
+              onClick={() => setShowWarning(false)}
+              className="btn"
+              style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 32px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}
+            >
+              Continue Test
+            </button>
+          </div>
+        </div>
+      )}
       <div className="fade-in">
         {/* Top Bar */}
         <div className="test-topbar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
           <div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#f0d080" }}>Practice Test</h2>
-            <p style={{ fontSize: "13px", color: "#8a7a60" }}>Welcome, {ticket.name}</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#0054A6" }}>Practice Test</h2>
+            <p style={{ fontSize: "13px", color: "#5a5a5a" }}>Welcome, {ticket.name}</p>
           </div>
           <div className="test-topbar-counters" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <div style={{ background: timeLeft < 300 ? "rgba(255,107,107,0.15)" : "rgba(201,168,76,0.1)", border: `1px solid ${timeLeft < 300 ? "rgba(255,107,107,0.4)" : "rgba(201,168,76,0.3)"}`, borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontFamily: "monospace", fontSize: "20px", color: timeLeft < 300 ? "#ff6b6b" : "#f0d080", animation: timeLeft < 60 ? "pulse 1s infinite" : "none" }}>{mm}:{ss}</div>
-              <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>REMAINING</div>
+              <div style={{ fontFamily: "monospace", fontSize: "20px", color: timeLeft < 300 ? "#E2231A" : "#0054A6", animation: timeLeft < 60 ? "pulse 1s infinite" : "none" }}>{mm}:{ss}</div>
+              <div style={{ fontSize: "10px", color: "#5a5a5a", letterSpacing: "1px" }}>REMAINING</div>
             </div>
             <div style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "8px", padding: "8px 16px", textAlign: "center" }}>
-              <div style={{ fontSize: "20px", color: "#f0d080" }}>{Object.keys(answers).length}<span style={{ color: "#4a3d20" }}>/{questions.length}</span></div>
-              <div style={{ fontSize: "10px", color: "#8a7a60", letterSpacing: "1px" }}>ANSWERED</div>
+              <div style={{ fontSize: "20px", color: "#0054A6" }}>{Object.keys(answers).length}<span style={{ color: "#888888" }}>/{questions.length}</span></div>
+              <div style={{ fontSize: "10px", color: "#5a5a5a", letterSpacing: "1px" }}>ANSWERED</div>
             </div>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: "4px", height: "4px", marginBottom: "24px", overflow: "hidden" }}>
+        <div style={{ background: "#e8e4d9", borderRadius: "4px", height: "4px", marginBottom: "24px", overflow: "hidden" }}>
           <div style={{ height: "100%", width: `${progress * 100}%`, background: "linear-gradient(90deg, #c9a84c, #f0d080)", borderRadius: "4px", transition: "width 0.3s" }} />
         </div>
 
         {/* Question */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,168,76,0.15)", borderRadius: "16px", padding: "32px", marginBottom: "20px" }}>
+        <div style={{ background: "#fafaf8", border: "1px solid rgba(201,168,76,0.2)", borderRadius: "16px", padding: "32px", marginBottom: "20px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-            <span style={{ background: `rgba(${catColors[q.category] === "#6bffb8" ? "107,255,184" : catColors[q.category] === "#f0d080" ? "240,208,128" : "255,159,107"},0.1)`, color: catColors[q.category], border: `1px solid ${catColors[q.category]}40`, borderRadius: "20px", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>{q.category}</span>
-            <span style={{ color: "#4a3d20", fontSize: "13px" }}>Q{current + 1} of {questions.length}</span>
+            <span style={{ background: `rgba(${catColors[q.category] === "#008A51" ? "0,138,81" : catColors[q.category] === "#0054A6" ? "0,84,166" : "212,96,10"},0.1)`, color: catColors[q.category], border: `1px solid ${catColors[q.category]}40`, borderRadius: "20px", padding: "4px 12px", fontSize: "11px", letterSpacing: "1px" }}>{q.category}</span>
+            <span style={{ color: "#888888", fontSize: "13px" }}>Q{current + 1} of {questions.length}</span>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", lineHeight: 1.6, color: "#e8dcc8", marginBottom: q.image ? "20px" : "28px" }}>{q.question}</p>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "19px", lineHeight: 1.6, color: "#1A1A1B", marginBottom: q.image ? "20px" : "28px" }}>{q.question}</p>
 
           {q.image && (
             <div style={{ marginBottom: "24px", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(201,168,76,0.25)", background: "rgba(0,0,0,0.3)" }}>
@@ -101,7 +228,7 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
                 alt="Vehicle controls diagram"
                 style={{ width: "100%", maxHeight: "320px", objectFit: "contain", display: "block", padding: "12px" }}
               />
-              <div style={{ padding: "6px 12px 8px", fontSize: "11px", color: "#8a7a60", letterSpacing: "1px", textTransform: "uppercase", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
+              <div style={{ padding: "6px 12px 8px", fontSize: "11px", color: "#5a5a5a", letterSpacing: "1px", textTransform: "uppercase", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
                 Vehicle Controls Diagram — refer to this image to answer the question
               </div>
             </div>
@@ -112,8 +239,8 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
               const selected = answers[q.id] === i;
               const labels = ["A", "B", "C", "D"];
               return (
-                <button key={i} onClick={() => setAnswers(a => { const next = { ...a, [q.id]: i }; answersRef.current = next; return next; })} className="btn" style={{ background: selected ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${selected ? "rgba(201,168,76,0.5)" : "rgba(255,255,255,0.08)"}`, borderRadius: "10px", padding: "14px 18px", textAlign: "left", color: selected ? "#f0d080" : "#e8dcc8", fontSize: "15px", display: "flex", alignItems: "center", gap: "12px" }}>
-                  <span style={{ background: selected ? "rgba(201,168,76,0.2)" : "rgba(255,255,255,0.06)", border: `1px solid ${selected ? "#c9a84c" : "rgba(255,255,255,0.1)"}`, borderRadius: "50%", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>{labels[i]}</span>
+                <button key={i} onClick={() => setAnswers(a => { const next = { ...a, [q.id]: i }; answersRef.current = next; return next; })} className="btn" style={{ background: selected ? "rgba(201,168,76,0.15)" : "#f3f4f6", border: `1px solid ${selected ? "rgba(201,168,76,0.5)" : "#d1d5db"}`, borderRadius: "10px", padding: "14px 18px", textAlign: "left", color: selected ? "#0054A6" : "#1A1A1B", fontSize: "15px", display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ background: selected ? "rgba(201,168,76,0.2)" : "#e5e7eb", border: `1px solid ${selected ? "#c9a84c" : "#d1d5db"}`, borderRadius: "50%", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, flexShrink: 0 }}>{labels[i]}</span>
                   {opt}
                 </button>
               );
@@ -124,18 +251,23 @@ function TestScreen({ ticket, setScreen, setTestResult }) {
         {/* Navigation */}
         <div style={{ display: "flex", gap: "12px", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", gap: "8px" }}>
-            <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === 0 ? 0.4 : 1 }}>← Prev</button>
-            <button onClick={() => setCurrent(c => Math.min(questions.length - 1, c + 1))} disabled={current === questions.length - 1} className="btn" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#8a7a60", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === questions.length - 1 ? 0.4 : 1 }}>Next →</button>
+            <button onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0} className="btn" style={{ background: "#f3f4f6", border: "1px solid #d1d5db", color: "#5a5a5a", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === 0 ? 0.4 : 1 }}>← Prev</button>
+            <button onClick={() => setCurrent(c => Math.min(questions.length - 1, c + 1))} disabled={current === questions.length - 1} className="btn" style={{ background: "#f3f4f6", border: "1px solid #d1d5db", color: "#5a5a5a", padding: "10px 18px", borderRadius: "8px", fontSize: "14px", opacity: current === questions.length - 1 ? 0.4 : 1 }}>Next →</button>
           </div>
-          <button onClick={() => handleSubmit()} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}>
-            Submit Test →
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button onClick={() => setShowExitConfirm(true)} className="btn" style={{ background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.35)", color: "var(--accent-red)", padding: "12px 20px", borderRadius: "8px", fontSize: "15px", fontWeight: 600 }}>
+              ✕ Exit
+            </button>
+            <button onClick={() => submitTest()} className="btn" style={{ background: "linear-gradient(135deg, #c9a84c, #f0d080)", color: "#0a0f1e", padding: "12px 28px", borderRadius: "8px", fontSize: "15px", fontWeight: 700 }}>
+              Submit Test →
+            </button>
+          </div>
         </div>
 
         {/* Question Grid */}
         <div style={{ marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
           {questions.map((q2, i) => (
-            <button key={i} onClick={() => setCurrent(i)} className="btn" style={{ width: "36px", height: "36px", borderRadius: "6px", background: i === current ? "rgba(201,168,76,0.3)" : answers[q2.id] !== undefined ? "rgba(107,255,184,0.15)" : "rgba(255,255,255,0.05)", border: `1px solid ${i === current ? "#c9a84c" : answers[q2.id] !== undefined ? "rgba(107,255,184,0.3)" : "rgba(255,255,255,0.08)"}`, color: i === current ? "#f0d080" : answers[q2.id] !== undefined ? "#6bffb8" : "#4a3d20", fontSize: "12px", fontWeight: 700 }}>{i + 1}</button>
+            <button key={i} onClick={() => setCurrent(i)} className="btn" style={{ width: "36px", height: "36px", borderRadius: "6px", background: i === current ? "rgba(201,168,76,0.25)" : answers[q2.id] !== undefined ? "rgba(0,138,81,0.1)" : "#f3f4f6", border: `1px solid ${i === current ? "#c9a84c" : answers[q2.id] !== undefined ? "rgba(0,138,81,0.4)" : "#d1d5db"}`, color: i === current ? "#0054A6" : answers[q2.id] !== undefined ? "#008A51" : "#888888", fontSize: "12px", fontWeight: 700 }}>{i + 1}</button>
           ))}
         </div>
       </div>

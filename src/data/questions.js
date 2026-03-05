@@ -132,7 +132,7 @@ export const QUESTIONS_DB = [
     question:
       "What is the longest period a vehicle may be parked in one place on a road outside urban areas?",
     options: ["7 days.", "48 hours.", "24 hours."],
-    answer: 1,
+    answer: 2,
   },
   {
     id: 14,
@@ -148,21 +148,23 @@ export const QUESTIONS_DB = [
   {
     id: 15,
     category: "Rules of the Road",
-    question: "You are NOT allowed to stop...",
+    question:
+      "Which of the following is a place where you are NOT allowed to stop?",
     options: [
       "On the pavement (sidewalk).",
-      "With the front of your vehicle facing oncoming traffic on a two-way road.",
-      "Next to any obstruction in the road.",
+      "On the left side of the road in a 60 km/h zone, when it is safe to do so.",
+      "Within 50m of a pedestrian crossing on the far side, where there is no marking.",
     ],
     answer: 0,
   },
   {
     id: 16,
     category: "Rules of the Road",
-    question: "You are NOT allowed to stop...",
+    question:
+      "Which of the following is a place where you are NOT allowed to stop?",
     options: [
       "Where you are also prohibited to park.",
-      "9m or less from the entrance of a tunnel or bridge.",
+      "On the left side of a road where the roadway is wider than 9m, when no signs prohibit it.",
       "Opposite a vehicle where the roadway is 9m wide.",
     ],
     answer: 0,
@@ -397,7 +399,7 @@ export const QUESTIONS_DB = [
     question: "Where may you legally stop your vehicle?",
     options: [
       "8m from the entrance to a tunnel.",
-      "5m from a pedestrian crossing.",
+      "6m from a pedestrian crossing.",
       "10m from a level railway crossing.",
     ],
     answer: 1,
@@ -416,7 +418,7 @@ export const QUESTIONS_DB = [
     question: "Which statement about your hooter is correct?",
     options: [
       "The tone or pitch of the sound may not change.",
-      "Someone must hear it from at least 50m away.",
+      "Someone must hear it from at least 90m away.",
       "You may use it to get the attention of someone you want to offer a lift.",
     ],
     answer: 0,
@@ -608,7 +610,7 @@ export const QUESTIONS_DB = [
     options: [
       "When indicated to do so by a traffic officer.",
       "In an intersection.",
-      "In contravention of any road traffic sign.",
+      "On the left side of the road to allow a passenger to out of their vehicle, if it is safe to do so.",
     ],
     answer: 1,
   },
@@ -766,8 +768,13 @@ export const QUESTIONS_DB = [
   {
     id: 71,
     category: "Road Signs",
-    question: "In South Africa, what type of road sign specifically uses a YELLOW background to indicate that the situation is not permanent?",
-    options: ["Regulatory (prohibition) signs.", "Temporary road signs.", "Guidance and information signs."],
+    question:
+      "In South Africa, what type of road sign specifically uses a YELLOW background to indicate that the situation is not permanent?",
+    options: [
+      "Regulatory (prohibition) signs.",
+      "Temporary road signs.",
+      "Guidance and information signs.",
+    ],
     answer: 1,
   },
   {
@@ -1191,9 +1198,9 @@ export const QUESTIONS_DB = [
     image: "/road signs/r101 road sign.png",
     question: "Look at this road sign. What does it mean and what must you do?",
     options: [
-      "Slow down and proceed only if no other traffic is present.",
-      "Come to a complete stop, yield to all traffic, and only proceed when it is safe.",
-      "Stop for 3 seconds, then proceed cautiously.",
+      "You may not drive faster than 50 km/h.",
+      "You must drive at a speed of at least 50 km/h.",
+      "The recommended speed for this section of road is 50 km/h.",
     ],
     answer: 1,
   },
@@ -1203,9 +1210,9 @@ export const QUESTIONS_DB = [
     image: "/road signs/road-sign-R102.jpg",
     question: "Look at this road sign. What does it require of you?",
     options: [
-      "Come to a complete stop and wait for permission to proceed.",
-      "Give way to oncoming or crossing traffic and only proceed when it is safe.",
-      "Reduce your speed to 30 km/h.",
+      "Only vehicles with a gross vehicle mass exceeding 10 tonnes may use this road.",
+      "Vehicles with a gross vehicle mass exceeding 10 tonnes are prohibited from this road.",
+      "All vehicles must maintain a minimum speed of 10 km/h.",
     ],
     answer: 1,
   },
@@ -1217,7 +1224,7 @@ export const QUESTIONS_DB = [
       "This inverted triangular sign is displayed at an intersection. What must you do?",
     options: [
       "Come to a complete stop and wait for 3 seconds.",
-      "Slow down, yield to all oncoming and crossing traffic, and only proceed when safe.",
+      "Stop for all directions, but drivers turning left need only give way / yield.",
       "Proceed normally — you have right of way.",
     ],
     answer: 1,
@@ -1241,11 +1248,11 @@ export const QUESTIONS_DB = [
     image: "/road signs/SADC_road_sign_R107.svg.png",
     question: "Look at this road sign. What does it mean?",
     options: [
-      "No parking is allowed beyond this point.",
+      "You must only proceed straight ahead.",
       "No vehicles may enter this road.",
-      "No pedestrians are allowed on this road.",
+      "The road ahead is a one-way street.",
     ],
-    answer: 1,
+    answer: 0,
   },
   {
     id: 114,
@@ -1253,9 +1260,9 @@ export const QUESTIONS_DB = [
     image: "/road signs/r108 road sign.webp",
     question: "Look at this road sign. What movement does it prohibit?",
     options: [
-      "Turning left at the next intersection.",
-      "Making a U-turn at or beyond this sign.",
-      "Stopping or parking anywhere on this road.",
+      "You may only turn left at the intersection ahead.",
+      "You are prohibited from turning left.",
+      "You must yield to traffic coming from the left.",
     ],
     answer: 1,
   },
@@ -1265,9 +1272,9 @@ export const QUESTIONS_DB = [
     image: "/road signs/SADC_road_sign_R109.svg.png",
     question: "Look at this road sign. What turn does it prohibit?",
     options: [
-      "Turning right at this intersection.",
-      "Turning left at this intersection.",
-      "Going straight through the intersection.",
+      "You are prohibited from turning right at the intersection ahead.",
+      "You must turn right at the intersection ahead.",
+      "You may either go straight or turn right at the intersection.",
     ],
     answer: 1,
   },
@@ -1277,11 +1284,11 @@ export const QUESTIONS_DB = [
     image: "/road signs/SADC_road_sign_R2.1.svg.png",
     question: "Look at this road sign. What does it indicate?",
     options: [
-      "The advisory (recommended) speed for this road.",
-      "The minimum speed you must maintain.",
-      "The maximum speed permitted on this road.",
+      "You must come to a complete stop even if no pedestrians are present.",
+      "You must yield the right of way to any pedestrian crossing or waiting to cross the road.",
+      "You must maintain a constant speed and only stop if a pedestrian is in your direct path.",
     ],
-    answer: 2,
+    answer: 1,
   },
   {
     id: 117,
@@ -1289,23 +1296,23 @@ export const QUESTIONS_DB = [
     image: "/road signs/SADC_road_sign_R206.svg.png",
     question: "Look at this road sign. What does it instruct you to do?",
     options: [
-      "Keep to the right of the obstruction or island ahead.",
-      "Keep to the left of the obstruction or island ahead.",
-      "Stop and wait for oncoming traffic to pass.",
+      "No hooting or use of audible warning devices is allowed.",
+      "You must hoot to warn pedestrians of your presence.",
+      "The road ahead is closed to all motor vehicles.",
     ],
-    answer: 1,
+    answer: 0,
   },
   {
     id: 118,
     category: "Road Signs",
     image: "/road signs/R208.webp",
-    question: "Look at this road sign. What does it mean?",
+    question: "What does this regulatory sign prohibit?",
     options: [
-      "No parking on this section of road.",
-      "Overtaking is not permitted on this section of road.",
-      "No right turns are allowed on this road.",
+      "Goods vehicles exceeding a certain gross vehicle mass are prohibited.",
+      "No overtaking of power-driven vehicles is allowed.",
+      "No parking or stopping is permitted beyond this point.",
     ],
-    answer: 1,
+    answer: 0,
   },
   {
     id: 119,
@@ -1314,7 +1321,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it indicate?",
     options: [
       "Overtaking is now prohibited beyond this point.",
-      "The no-overtaking restriction has ended — overtaking is now permitted again.",
+      "The driver is prohibited from turning left",
       "All traffic must turn right.",
     ],
     answer: 1,
@@ -1327,7 +1334,7 @@ export const QUESTIONS_DB = [
     options: [
       "Driving faster than the indicated speed.",
       "Parking your vehicle in this area.",
-      "Stopping your vehicle in this area at any time.",
+      "Overtaking other vehicles on this road.",
     ],
     answer: 2,
   },
@@ -1338,7 +1345,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it prohibit?",
     options: [
       "Parking for longer than 30 minutes.",
-      "Both stopping and parking your vehicle in this area.",
+      "Stopping your vehicle in this area.",
       "Driving faster than the indicated speed.",
     ],
     answer: 1,
@@ -1349,21 +1356,23 @@ export const QUESTIONS_DB = [
     image: "/road signs/SADC_road_sign_R3.svg.png",
     question: "Look at this road sign. What does it indicate?",
     options: [
-      "You are on a secondary road and must yield to traffic on the main road.",
-      "You are travelling on a priority road and have right of way at upcoming intersections.",
-      "This is a no-overtaking zone.",
+      "No vehicles are allowed to enter this road from this direction.",
+      "You are traveling on a priority road and have right of way.",
+      "This is a dead-end street with no throughway.",
     ],
-    answer: 1,
+    answer: 0,
   },
   {
+    // remove this question
     id: 123,
     category: "Road Signs",
     image: "/road signs/SADC_road_sign_R512.svg.png",
-    question: "Look at this road sign. What does it tell you about this road?",
+    question:
+      "This supplementary plate is displayed beneath a regulatory sign. What does it tell you about when that sign applies?",
     options: [
-      "This road has two-way traffic — keep to the left.",
-      "You are entering a one-way road where all traffic moves in the direction shown.",
-      "This is a priority road — you have right of way.",
+      "The primary sign applies at all times, day and night.",
+      "The primary sign applies during night-time hours.",
+      "The primary sign applies during daytime hours only.",
     ],
     answer: 1,
   },
@@ -1387,10 +1396,10 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "A T-junction is ahead — the road you are on ends at a junction.",
-      "A crossroad intersection is ahead.",
+      "A crossroad is ahead.",
       "A traffic circle is ahead.",
     ],
-    answer: 0,
+    answer: 1,
   },
   {
     id: 126,
@@ -1400,9 +1409,9 @@ export const QUESTIONS_DB = [
     options: [
       "A steep uphill (ascent) is ahead — use a lower gear to maintain speed.",
       "A steep downhill (descent) is ahead — use a lower gear and check your brakes.",
-      "A sharp bend is ahead — reduce speed.",
+      "A sharp curve to the left is ahead — reduce speed.",
     ],
-    answer: 1,
+    answer: 2,
   },
   {
     id: 127,
@@ -1411,7 +1420,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "The road gets wider ahead — a new lane merges in.",
-      "The road narrows ahead — be alert to oncoming and side traffic.",
+      "That a one-way road is about to become a two-way road.",
       "A lane is closed ahead due to roadworks.",
     ],
     answer: 1,
@@ -1423,7 +1432,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What hazard does it warn you about?",
     options: [
       "Loose gravel on the road surface ahead.",
-      "Rocks or boulders may fall onto the road from the hillside ahead.",
+      "The narrowing of the road, such as a bridge, tunnel.",
       "An uneven road surface ahead.",
     ],
     answer: 1,
@@ -1459,7 +1468,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What hazard does it warn you about?",
     options: [
       "Loose gravel on the road surface ahead — reduce speed and drive carefully.",
-      "An uneven or bumpy road surface ahead.",
+      "A motor gate or cattle grid located on the left side of the road.",
       "Slippery road conditions when the road is wet.",
     ],
     answer: 0,
@@ -1470,7 +1479,7 @@ export const QUESTIONS_DB = [
     image: "/road signs/SADC_road_sign_W325.svg.png",
     question: "Look at this road sign. What does it warn you about?",
     options: [
-      "A low overhead structure ahead — tall vehicles may not be able to pass.",
+      "The paved road surface is ending and a gravel or unpaved road surface begins ahead.",
       "A narrow bridge ahead — one lane at a time.",
       "A low-speed residential zone ahead.",
     ],
@@ -1483,7 +1492,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "A slippery road surface ahead.",
-      "An uneven or bumpy road surface ahead — reduce speed.",
+      "The width of the carriageway is reduced ahead from both the left and right sides.",
       "Road works causing a rough and damaged surface.",
     ],
     answer: 1,
@@ -1495,7 +1504,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "Loose gravel on the road ahead.",
-      "A slippery road surface ahead — reduce speed and avoid sudden braking or steering.",
+      "A raised hump in the road surface.",
       "An uneven road surface ahead.",
     ],
     answer: 1,
@@ -1507,7 +1516,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "A farmyard or agricultural crossing is ahead.",
-      "Animals may be on or crossing the road ahead — slow down and watch out.",
+      "The road surface ahead can become slippery, especially when wet.",
       "A zoo or animal park entrance is nearby.",
     ],
     answer: 1,
@@ -1519,7 +1528,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "A dip or low-lying bridge is ahead.",
-      "A speed hump (road bump) is ahead — reduce your speed before reaching it.",
+      "The road ahead leads to an open edge of a jetty, quay, or river bank that is not protected by a barrier.",
       "The road narrows to a single lane ahead.",
     ],
     answer: 1,
@@ -1531,7 +1540,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "A designated pedestrian crossing with traffic signals is ahead.",
-      "Pedestrians may be present on or crossing the road ahead — be alert.",
+      "A drift or a significant dip in the road surface that may be flooded or contain standing water.",
       "A school zone — children are expected to be crossing.",
     ],
     answer: 1,
@@ -1555,7 +1564,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it warn you about?",
     options: [
       "A public pedestrian crossing with traffic signals is ahead.",
-      "School children may be crossing the road ahead — reduce speed and be prepared to stop.",
+      "The presence of slow-moving farm machinery, such as tractors,.",
       "A sports field is nearby — watch for people running into the road.",
     ],
     answer: 1,
@@ -1567,7 +1576,7 @@ export const QUESTIONS_DB = [
     question: "Look at this road sign. What does it indicate?",
     options: [
       "A new speed restriction or prohibition begins at this point.",
-      "A previously imposed speed restriction or prohibition has ended.",
+      "A very sharp change in road alignment.",
       "All vehicles must stop at this point.",
     ],
     answer: 1,
@@ -1618,9 +1627,21 @@ export const QUESTIONS_DB = [
     image: "/road signs/GS403.jpg",
     question: "Look at this guidance sign. What does it indicate?",
     options: [
-      "The beginning of a freeway or expressway section ahead.",
-      "The end of a freeway or expressway section.",
-      "A rest area is available ahead on the freeway.",
+      "The road narrows by one lane on the left-hand side.",
+      "An increase in the number of lanes from three to four ahead.",
+      "A split in the road where the left lanes lead to a different freeway.",
+    ],
+    answer: 1,
+  },
+   {
+    id: 145,
+    category: "Road Signs",
+    image: "/road signs/GS403.jpg",
+    question: "Bullshit question ?",
+    options: [
+      "The road narrows by one lane on the left-hand side.",
+      "Bullshit answer",
+      "A split in the road where the left lanes lead to a different freeway.",
     ],
     answer: 1,
   },
